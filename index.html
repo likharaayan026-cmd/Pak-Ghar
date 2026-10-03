@@ -778,7 +778,7 @@ async function generateRecipes(ingredients, goal='balanced', servings=4) {
   try {
     await new Promise(r => setTimeout(r, 1400));
     const recipes = buildLocalRecipes(ingredients, goal, servings);
-    if (!recipes || recipes.length < 3) throw new Error("Insufficient recipes");
+    if (!recipes || recipes.length < 1) throw new Error("Insufficient recipes");
     state.history.unshift({
       id: Date.now().toString(),
       timestamp: new Date().toISOString(),
@@ -816,284 +816,410 @@ async function generateRecipes(ingredients, goal='balanced', servings=4) {
 }
 
 /* ============================================================
-   LOCAL RECIPE ENGINE — Real Ghar-Jaisa Khana
+   LOCAL RECIPE ENGINE — REAL Ingredient-Based Recipes
    ============================================================ */
+
+// Ingredient → possible dishes mapping (real Indian ghar ka khana)
+const INGREDIENT_DISH_MAP = {
+  'potato': {
+    dishes: [
+      { name: 'Aloo Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' },
+      { name: 'Aloo ki Sukhi Sabzi', type: 'Lunch', emoji: '🥔', time: 25, difficulty: 'Easy' },
+      { name: 'Aloo Gobi', type: 'Dinner', emoji: '🥦', time: 35, difficulty: 'Easy' },
+      { name: 'Aloo Matar', type: 'Dinner', emoji: '🫛', time: 30, difficulty: 'Easy' },
+      { name: 'Aloo Chaat', type: 'Snack', emoji: '🥗', time: 20, difficulty: 'Easy' },
+      { name: 'Jeera Aloo', type: 'Lunch', emoji: '🥔', time: 20, difficulty: 'Easy' }
+    ]
+  },
+  'tomato': {
+    dishes: [
+      { name: 'Tamatar Chutney', type: 'Side', emoji: '🍅', time: 15, difficulty: 'Easy' },
+      { name: 'Tamatar Curry', type: 'Dinner', emoji: '🍛', time: 25, difficulty: 'Easy' },
+      { name: 'Tamatar Shorba', type: 'Soup', emoji: '🍲', time: 20, difficulty: 'Easy' }
+    ]
+  },
+  'onion': {
+    dishes: [
+      { name: 'Pyaz ki Sabzi', type: 'Lunch', emoji: '🧅', time: 25, difficulty: 'Easy' },
+      { name: 'Pyaz Pakora', type: 'Snack', emoji: '🍢', time: 20, difficulty: 'Easy' }
+    ]
+  },
+  'paneer': {
+    dishes: [
+      { name: 'Paneer Butter Masala', type: 'Dinner', emoji: '🧀', time: 35, difficulty: 'Medium' },
+      { name: 'Paneer Tikka', type: 'Starter', emoji: '🍢', time: 30, difficulty: 'Medium' },
+      { name: 'Palak Paneer', type: 'Dinner', emoji: '🥬', time: 35, difficulty: 'Medium' },
+      { name: 'Paneer Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' },
+      { name: 'Kadai Paneer', type: 'Dinner', emoji: '🍛', time: 35, difficulty: 'Medium' },
+      { name: 'Paneer Bhurji', type: 'Breakfast', emoji: '🍳', time: 20, difficulty: 'Easy' }
+    ]
+  },
+  'cauliflower': {
+    dishes: [
+      { name: 'Gobhi ki Sabzi', type: 'Lunch', emoji: '🥦', time: 25, difficulty: 'Easy' },
+      { name: 'Aloo Gobi', type: 'Dinner', emoji: '🥦', time: 35, difficulty: 'Easy' },
+      { name: 'Gobhi Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' }
+    ]
+  },
+  'peas': {
+    dishes: [
+      { name: 'Matar Paneer', type: 'Dinner', emoji: '🫛', time: 30, difficulty: 'Easy' },
+      { name: 'Matar Dal', type: 'Lunch', emoji: '🥣', time: 30, difficulty: 'Easy' },
+      { name: 'Matar Pulao', type: 'Lunch', emoji: '🍚', time: 30, difficulty: 'Easy' }
+    ]
+  },
+  'spinach': {
+    dishes: [
+      { name: 'Palak Paneer', type: 'Dinner', emoji: '🥬', time: 35, difficulty: 'Medium' },
+      { name: 'Palak Dal', type: 'Lunch', emoji: '🥣', time: 30, difficulty: 'Easy' },
+      { name: 'Palak Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' }
+    ]
+  },
+  'carrot': {
+    dishes: [
+      { name: 'Gajar ka Halwa', type: 'Dessert', emoji: '🍮', time: 45, difficulty: 'Medium' },
+      { name: 'Gajar Sabzi', type: 'Lunch', emoji: '🥕', time: 25, difficulty: 'Easy' },
+      { name: 'Gajar Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' }
+    ]
+  },
+  'capsicum': {
+    dishes: [
+      { name: 'Shimla Mirch Sabzi', type: 'Lunch', emoji: '🫑', time: 25, difficulty: 'Easy' },
+      { name: 'Kadai Paneer', type: 'Dinner', emoji: '🍛', time: 35, difficulty: 'Medium' },
+      { name: 'Shimla Mirch Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' }
+    ]
+  },
+  'cabbage': {
+    dishes: [
+      { name: 'Bandh Gobhi Sabzi', type: 'Lunch', emoji: '🥬', time: 25, difficulty: 'Easy' },
+      { name: 'Cabbage Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' }
+    ]
+  },
+  'beans': {
+    dishes: [
+      { name: 'Sem ki Sabzi', type: 'Lunch', emoji: '🫘', time: 25, difficulty: 'Easy' },
+      { name: 'Beans Poriyal', type: 'Lunch', emoji: '🥘', time: 25, difficulty: 'Easy' }
+    ]
+  },
+  'mushroom': {
+    dishes: [
+      { name: 'Mushroom Masala', type: 'Dinner', emoji: '🍄', time: 30, difficulty: 'Medium' },
+      { name: 'Mushroom Bhaji', type: 'Lunch', emoji: '🍄', time: 25, difficulty: 'Easy' }
+    ]
+  },
+  'broccoli': {
+    dishes: [
+      { name: 'Broccoli Stir Fry', type: 'Lunch', emoji: '🥦', time: 20, difficulty: 'Easy' },
+      { name: 'Broccoli Paratha', type: 'Breakfast', emoji: '🥞', time: 30, difficulty: 'Medium' }
+    ]
+  },
+  'cucumber': {
+    dishes: [
+      { name: 'Kheera Raita', type: 'Side', emoji: '🥒', time: 10, difficulty: 'Easy' },
+      { name: 'Kheera Salad', type: 'Salad', emoji: '🥗', time: 10, difficulty: 'Easy' }
+    ]
+  },
+  'corn': {
+    dishes: [
+      { name: 'Corn Bhutta Masala', type: 'Snack', emoji: '🌽', time: 20, difficulty: 'Easy' },
+      { name: 'Corn Pulao', type: 'Lunch', emoji: '🍚', time: 30, difficulty: 'Easy' }
+    ]
+  },
+  'rice': {
+    dishes: [
+      { name: 'Ghar ka Pulao', type: 'Lunch', emoji: '🍚', time: 30, difficulty: 'Easy' },
+      { name: 'Khichdi', type: 'Dinner', emoji: '🍲', time: 30, difficulty: 'Easy' },
+      { name: 'Jeera Rice', type: 'Lunch', emoji: '🍚', time: 25, difficulty: 'Easy' }
+    ]
+  },
+  'egg': {
+    dishes: [
+      { name: 'Anda Bhurji', type: 'Breakfast', emoji: '🍳', time: 15, difficulty: 'Easy' },
+      { name: 'Anda Curry', type: 'Dinner', emoji: '🥚', time: 30, difficulty: 'Easy' },
+      { name: 'Omelette', type: 'Breakfast', emoji: '🍳', time: 10, difficulty: 'Easy' }
+    ]
+  },
+  'chicken': {
+    dishes: [
+      { name: 'Chicken Curry', type: 'Dinner', emoji: '🍗', time: 45, difficulty: 'Medium' },
+      { name: 'Chicken Tikka', type: 'Starter', emoji: '🍢', time: 40, difficulty: 'Medium' },
+      { name: 'Chicken Biryani', type: 'Dinner', emoji: '🍚', time: 60, difficulty: 'Hard' }
+    ]
+  },
+  'cheese': {
+    dishes: [
+      { name: 'Cheese Paratha', type: 'Breakfast', emoji: '🧀', time: 25, difficulty: 'Easy' },
+      { name: 'Cheese Toast', type: 'Snack', emoji: '🍞', time: 10, difficulty: 'Easy' }
+    ]
+  },
+  'butter': {
+    dishes: [
+      { name: 'Butter Naan', type: 'Side', emoji: '🫓', time: 30, difficulty: 'Medium' },
+      { name: 'Butter Toast', type: 'Breakfast', emoji: '🍞', time: 10, difficulty: 'Easy' }
+    ]
+  },
+  'milk': {
+    dishes: [
+      { name: 'Kheer', type: 'Dessert', emoji: '🍮', time: 45, difficulty: 'Medium' },
+      { name: 'Doodh Halwa', type: 'Dessert', emoji: '🍮', time: 40, difficulty: 'Medium' }
+    ]
+  },
+  'lemon': {
+    dishes: [
+      { name: 'Nimbu Pani', type: 'Drink', emoji: '🥤', time: 5, difficulty: 'Easy' },
+      { name: 'Nimbu Chutney', type: 'Side', emoji: '🍋', time: 10, difficulty: 'Easy' }
+    ]
+  },
+  'garlic': {
+    dishes: [
+      { name: 'Lehsun Chutney', type: 'Side', emoji: '🧄', time: 15, difficulty: 'Easy' },
+      { name: 'Lehsun Dal', type: 'Lunch', emoji: '🥣', time: 30, difficulty: 'Easy' }
+    ]
+  },
+  'ginger': {
+    dishes: [
+      { name: 'Adrak Chai', type: 'Drink', emoji: '🍵', time: 10, difficulty: 'Easy' },
+      { name: 'Adrak Chutney', type: 'Side', emoji: '🫚', time: 15, difficulty: 'Easy' }
+    ]
+  },
+  'chilli': {
+    dishes: [
+      { name: 'Mirchi ka Salan', type: 'Dinner', emoji: '🌶️', time: 30, difficulty: 'Medium' },
+      { name: 'Mirchi Pakora', type: 'Snack', emoji: '🍢', time: 20, difficulty: 'Easy' }
+    ]
+  }
+};
+
+// Combo dishes (jab 2+ ingredients milte hain)
+const COMBO_DISHES = [
+  {
+    requires: ['potato', 'cauliflower'],
+    name: 'Aloo Gobi',
+    type: 'Dinner', emoji: '🥦', time: 35, difficulty: 'Easy',
+    desc: 'Classic dhaba-style Aloo Gobi — ghar ka favourite.'
+  },
+  {
+    requires: ['potato', 'peas'],
+    name: 'Aloo Matar',
+    type: 'Dinner', emoji: '🫛', time: 30, difficulty: 'Easy',
+    desc: 'Aloo Matar ki sabzi — simple, tasty, ghar jaisa.'
+  },
+  {
+    requires: ['paneer', 'peas'],
+    name: 'Matar Paneer',
+    type: 'Dinner', emoji: '🧀', time: 30, difficulty: 'Easy',
+    desc: 'Matar Paneer — creamy, rich, dhaba style.'
+  },
+  {
+    requires: ['paneer', 'spinach'],
+    name: 'Palak Paneer',
+    type: 'Dinner', emoji: '🥬', time: 35, difficulty: 'Medium',
+    desc: 'Palak Paneer — iron-rich, creamy, delicious.'
+  },
+  {
+    requires: ['paneer', 'capsicum', 'onion'],
+    name: 'Kadai Paneer',
+    type: 'Dinner', emoji: '🍛', time: 35, difficulty: 'Medium',
+    desc: 'Kadai Paneer — restaurant style at home.'
+  },
+  {
+    requires: ['potato', 'tomato', 'onion'],
+    name: 'Aloo Tamatar Curry',
+    type: 'Dinner', emoji: '🍛', time: 30, difficulty: 'Easy',
+    desc: 'Aloo Tamatar Curry — tangy, ghar jaisa.'
+  },
+  {
+    requires: ['rice', 'peas'],
+    name: 'Matar Pulao',
+    type: 'Lunch', emoji: '🍚', time: 30, difficulty: 'Easy',
+    desc: 'Matar Pulao — fragrant rice with peas.'
+  },
+  {
+    requires: ['rice', 'potato'],
+    name: 'Aloo Pulao',
+    type: 'Lunch', emoji: '🍚', time: 30, difficulty: 'Easy',
+    desc: 'Aloo Pulao — comfort rice dish.'
+  },
+  {
+    requires: ['rice', 'carrot', 'peas'],
+    name: 'Veg Pulao',
+    type: 'Lunch', emoji: '🍚', time: 35, difficulty: 'Easy',
+    desc: 'Mix Veg Pulao — colourful, healthy, tasty.'
+  },
+  {
+    requires: ['cabbage', 'peas'],
+    name: 'Cabbage Matar Sabzi',
+    type: 'Lunch', emoji: '🥬', time: 25, difficulty: 'Easy',
+    desc: 'Bandh Gobhi Matar ki sabzi — simple ghar ka khana.'
+  }
+];
+
+// Missing ingredients (optional) suggestions
+const OPTIONAL_PANTRY = ['onion', 'tomato', 'garlic', 'ginger', 'green chilli', 'coriander', 'jeera', 'haldi', 'oil', 'salt'];
+
 function buildLocalRecipes(ingredients, goal, servings) {
-  const g = goal || 'balanced';
   const serv = servings || 4;
   const lang = state.language;
-  const dn = ingredients.map(i => displayName(i));
-  const list = dn.join(', ');
-  const first = dn[0] || (lang === 'hi' ? 'Sabzi' : 'Veggie');
-  const second = dn[1] || first;
-  const hasPaneer = ingredients.some(i => i.toLowerCase().includes('paneer'));
-  const hasPotato = ingredients.some(i => i.toLowerCase().includes('potato') || i.toLowerCase().includes('aloo'));
-  const hasPeas = ingredients.some(i => i.toLowerCase().includes('peas') || i.toLowerCase().includes('matar'));
-  const hasTomato = ingredients.some(i => i.toLowerCase().includes('tomato') || i.toLowerCase().includes('tamatar'));
-  const hasOnion = ingredients.some(i => i.toLowerCase().includes('onion') || i.toLowerCase().includes('pyaz'));
-  const hasCauliflower = ingredients.some(i => i.toLowerCase().includes('cauliflower') || i.toLowerCase().includes('gobhi'));
+  const scaled = serv / 2;
 
-  // Real ghar-jaisa dish names
-  const names = {
-    en: {
-      alooGobi: g === 'highprotein' ? `${first} Paneer Sabzi` : (hasPotato && hasCauliflower ? `Aloo Gobi Ghar Style` : `${first} ki Sabzi`),
-      dal: hasPeas ? `Matar Dal Tadka` : `Ghar ki Dal`,
-      khichdi: `Ghar ki Khichdi`,
-      paratha: hasPotato ? `Aloo Paratha` : (hasPaneer ? `Paneer Paratha` : `${first} Paratha`),
-      sabzi: `${first} ki Sukhi Sabzi`,
-      curry: hasPaneer ? `Paneer Butter Masala` : (hasTomato && hasOnion ? `Tamatar Pyaz Curry` : `${first} Curry Ghar Style`),
-      chole: `Punjabi Chole`,
-      pulao: `Ghar ka Veg Pulao`,
-      raita: `Boondi Raita`,
-      chutney: `Hare Dhaniya ki Chutney`
-    },
-    hi: {
-      alooGobi: g === 'highprotein' ? `${first} Paneer Sabzi` : (hasPotato && hasCauliflower ? `Aloo Gobi Ghar Style` : `${first} ki Sabzi`),
-      dal: hasPeas ? `Matar Dal Tadka` : `Ghar ki Dal`,
-      khichdi: `Ghar ki Khichdi`,
-      paratha: hasPotato ? `Aloo Paratha` : (hasPaneer ? `Paneer Paratha` : `${first} Paratha`),
-      sabzi: `${first} ki Sukhi Sabzi`,
-      curry: hasPaneer ? `Paneer Butter Masala` : (hasTomato && hasOnion ? `Tamatar Pyaz Curry` : `${first} Curry Ghar Style`),
-      chole: `Punjabi Chole`,
-      pulao: `Ghar ka Veg Pulao`,
-      raita: `Boondi Raita`,
-      chutney: `Hare Dhaniya ki Chutney`
+  const userIngs = ingredients.map(i => String(i).toLowerCase().trim());
+  const knownIngs = userIngs.filter(i => INGREDIENT_DISH_MAP[i]);
+
+  const recipes = [];
+  const usedNames = new Set();
+
+  // 1. COMBO dishes first
+  COMBO_DISHES.forEach(combo => {
+    const matched = combo.requires.every(req => userIngs.includes(req));
+    if (matched && !usedNames.has(combo.name)) {
+      usedNames.add(combo.name);
+      recipes.push(makeRecipe(combo, ingredients, combo.requires, serv, scaled, lang, goal));
     }
-  }[lang];
+  });
 
-  const descs = {
-    en: {
-      alooGobi: `Ghar jaisi ${list} ki sabzi — dhaba style, made with simple spices for ${serv} people.`,
-      dal: `Comforting dal — the everyday ghar ka khana favourite. Perfect for ${serv} people.`,
-      khichdi: `Soft, comforting khichdi — light on stomach, easy to make, perfect for ${serv} people.`,
-      paratha: `Crispy, flaky parathas — the classic Indian breakfast. Serves ${serv} people.`,
-      sabzi: `Simple dry sabzi — a daily ghar ka khana classic for ${serv} people.`,
-      curry: `Rich, creamy curry — the star of every Indian dinner table. Serves ${serv} people.`,
-      chole: `Punjabi-style chole — spicy, tangy chickpeas for ${serv} people.`,
-      pulao: `Fragrant veg pulao — aromatic rice with vegetables. Serves ${serv} people.`,
-      raita: `Cool, refreshing yogurt raita — a perfect side for any meal.`,
-      chutney: `Fresh coriander chutney — the green zing on every plate.`
-    },
-    hi: {
-      alooGobi: `Ghar jaisi ${list} ki sabzi — dhaba style, ${serv} logon ke liye.`,
-      dal: `Comforting dal — har ghar ki favourite. ${serv} logon ke liye perfect.`,
-      khichdi: `Soft, comforting khichdi — pet ke liye aasan, ${serv} logon ke liye.`,
-      paratha: `Crispy, flaky parathas — classic Indian breakfast. ${serv} logon ke liye.`,
-      sabzi: `Simple sukhi sabzi — roz ka ghar ka khana, ${serv} logon ke liye.`,
-      curry: `Rich, creamy curry — har dinner table ka star. ${serv} logon ke liye.`,
-      chole: `Punjabi-style chole — spicy, tangy chane, ${serv} logon ke liye.`,
-      pulao: `Fragrant veg pulao — khushbudar chawal, ${serv} logon ke liye.`,
-      raita: `Cool, refreshing dahi raita — har khane ke saath perfect.`,
-      chutney: `Fresh dhaniya chutney — har plate pe hari mirch.`
-    }
-  }[lang];
+  // 2. Single-ingredient dishes
+  knownIngs.forEach(ing => {
+    const data = INGREDIENT_DISH_MAP[ing];
+    data.dishes.forEach(dish => {
+      if (usedNames.has(dish.name)) return;
+      const dishLower = dish.name.toLowerCase();
+      const mentionsOther = Object.keys(INGREDIENT_DISH_MAP).some(other => {
+        if (other === ing) return false;
+        if (userIngs.includes(other)) return false;
+        const otherHi = (EN_TO_HI[other] || '').toLowerCase();
+        return dishLower.includes(other) || (otherHi && dishLower.includes(otherHi));
+      });
+      if (mentionsOther) return;
+      usedNames.add(dish.name);
+      recipes.push(makeRecipe(dish, ingredients, [ing], serv, scaled, lang, goal));
+    });
+  });
 
-  // Scale ingredients by servings (base = 2 people, scale factor = serv/2)
-  const scale = serv / 2;
-  const scaleQty = (baseQty, unit) => {
-    const scaled = baseQty * scale;
-    const rounded = scaled % 1 === 0 ? scaled : scaled.toFixed(1);
-    return `${rounded} ${unit}`;
-  };
+  // 3. Fallback
+  if (recipes.length < 1) {
+    const primary = ingredients[0] || 'Veggie';
+    const dn = displayName(primary);
+    const fallbackNames = lang === 'hi' ? [
+      `${dn} ki Ghar Jaisi Sabzi`,
+      `${dn} ka Simple Curry`,
+      `${dn} Paratha`
+    ] : [
+      `${dn} Ghar Jaisi Sabzi`,
+      `${dn} Simple Curry`,
+      `${dn} Paratha`
+    ];
+    fallbackNames.forEach((name, i) => {
+      if (usedNames.has(name)) return;
+      usedNames.add(name);
+      recipes.push(makeRecipe(
+        { name, type: ['Lunch','Dinner','Breakfast'][i], emoji: foodEmoji(name), time: [25,30,30][i], difficulty: 'Easy' },
+        ingredients, [String(primary).toLowerCase()], serv, scaled, lang, goal
+      ));
+    });
+  }
 
-  const templates = [
-    {
-      name: names.alooGobi, description: descs.alooGobi,
-      cuisine:'Indian', mealType:'Lunch', difficulty:'Easy',
-      servings: serv, prepTime:'15 mins', cookTime:'20 mins', totalTime:'35 mins',
-      ingredients: [
-        ...ingredients.map(i => `${scaleQty(1, 'cup')} ${displayName(i)}, chopped`),
-        `${scaleQty(2, 'tbsp')} oil`,
-        `${scaleQty(1, 'tsp')} jeera (cumin seeds)`,
-        `${scaleQty(1, 'tsp')} haldi (turmeric)`,
-        `${scaleQty(1, 'tsp')} dhaniya powder`,
-        `${scaleQty(1, 'tsp')} lal mirch`,
-        `${scaleQty(1, 'tsp')} garam masala`,
-        `${scaleQty(1, 'tsp')} salt (or to taste)`,
-        `${scaleQty(2, 'tbsp')} hara dhaniya, chopped`
-      ],
-      instructions: [
-        `Sabzi ko dho kar chhote tukdon mein kaat lein. Pyaz ko barik kaat lein.`,
-        `Kadhai mein ${scaleQty(2, 'tbsp')} tel garam karein. Jeera dalein aur chatakne dein.`,
-        hasOnion ? `Pyaz dalein aur golden brown hone tak bhunein (4-5 min).` : `Adrak-lehsun paste dalein aur 30 second bhunein.`,
-        `Tamatar dalein (agar hai) aur 2 min tak pakayein jab tak tel alag na ho jaye.`,
-        `${dn.join(', ')} dalein aur 4-5 min tak bhunein.`,
-        `Haldi, dhaniya powder, lal mirch, garam masala aur namak dalein. Achhe se milayein.`,
-        `1/4 cup paani dalein, dhak kar 8-10 min tak dhimi aanch par pakayein.`,
-        `Hara dhaniya se sajayein aur garma-garam roti ke saath serve karein.`
-      ],
-      tips: [
-        'Sabzi ko zyada na pakayein — thodi crunchy honi chahiye.',
-        'Aakhir mein nimbu ka ras dalein — swaad badh jayega.',
-        'Restaurant style ke liye 1 tsp ghee dalein.',
-        `Yeh recipe ${serv} logon ke liye perfect hai.`
-      ]
-    },
-    {
-      name: names.dal, description: descs.dal,
-      cuisine:'Indian', mealType:'Dinner', difficulty:'Easy',
-      servings: serv, prepTime:'10 mins', cookTime:'25 mins', totalTime:'35 mins',
-      ingredients: [
-        `${scaleQty(1, 'cup')} toor dal (arhar dal)`,
-        ...(hasPeas ? [`${scaleQty(0.5, 'cup')} matar (peas)`] : []),
-        `${scaleQty(1, 'medium')} pyaz, chopped`,
-        `${scaleQty(2, 'medium')} tamatar, chopped`,
-        `${scaleQty(1, 'tsp')} haldi`,
-        `${scaleQty(1, 'tsp')} jeera`,
-        `${scaleQty(3, 'cloves')} lehsun, chopped`,
-        `${scaleQty(2, 'tbsp')} ghee/oil`,
-        `${scaleQty(1, 'tsp')} garam masala`,
-        `${scaleQty(1, 'tsp')} lal mirch`,
-        `Namak swaad anusaar`,
-        `Hara dhaniya`
-      ],
-      instructions: [
-        `Dal ko dho kar 3 cup paani, haldi aur namak ke saath pressure cooker mein 4-5 seeti tak pakayein.`,
-        `Ek kadhai mein ghee garam karein. Jeera aur lehsun dalein — chatakne dein.`,
-        `Pyaz dalein aur golden bhunein.`,
-        `Tamatar, lal mirch aur garam masala dalein. 3-4 min tak pakayein jab tak tel alag na ho.`,
-        hasPeas ? `Matar dalein aur 3 min tak pakayein.` : `2 tbsp paani dalein aur mix karein.`,
-        `Pakayi hui dal dalein aur achhe se milayein.`,
-        `5 min tak ubaal aane dein. Consistency adjust karein.`,
-        `Hara dhaniya se sajayein aur chawal ya roti ke saath serve karein.`
-      ],
-      tips: [
-        'Dal ko achhe se pakayein — soft honi chahiye.',
-        'Tadka aakhir mein dalein — flavour zyada aayega.',
-        'Agar dal patli lage toh 5 min aur pakayein.',
-        `Perfect for ${serv} logon ke liye.`
-      ]
-    },
-    {
-      name: names.khichdi, description: descs.khichdi,
-      cuisine:'Indian', mealType:'Dinner', difficulty:'Easy',
-      servings: serv, prepTime:'10 mins', cookTime:'20 mins', totalTime:'30 mins',
-      ingredients: [
-        `${scaleQty(1, 'cup')} chawal (rice)`,
-        `${scaleQty(0.5, 'cup')} moong dal`,
-        ...ingredients.slice(0, 3).map(i => `${scaleQty(0.5, 'cup')} ${displayName(i)}, chopped`),
-        `${scaleQty(1, 'tsp')} jeera`,
-        `${scaleQty(1, 'tsp')} haldi`,
-        `${scaleQty(2, 'tbsp')} ghee`,
-        `${scaleQty(1, 'inch')} adrak, grated`,
-        `Namak swaad anusaar`,
-        `${scaleQty(4, 'cups')} paani`
-      ],
-      instructions: [
-        `Chawal aur dal ko dho kar 15 min bhigo dein.`,
-        `Cooker mein ghee garam karein. Jeera aur adrak dalein.`,
-        `Sabziyan dalein aur 2-3 min bhunein.`,
-        `Chawal, dal, haldi aur namak dalein.`,
-        `${scaleQty(4, 'cups')} paani dalein aur milayein.`,
-        `Cooker band karein aur 3-4 seeti tak pakayein.`,
-        `Steam nikalne dein, khichdi ko halka mix karein.`,
-        `Ghee dalein aur dahi ya papad ke saath serve karein.`
-      ],
-      tips: [
-        'Pet ke liye aasan — bimaar waqt mein best.',
-        'Sabziyan apne pasand ki dalein.',
-        'Sookhi khichdi ke liye 1 cup kam paani dalein.',
-        `Perfect for ${serv} logon ke liye.`
-      ]
-    },
-    {
-      name: names.paratha, description: descs.paratha,
-      cuisine:'Indian', mealType:'Breakfast', difficulty:'Medium',
-      servings: serv, prepTime:'20 mins', cookTime:'15 mins', totalTime:'35 mins',
-      ingredients: [
-        `${scaleQty(2, 'cups')} atta (wheat flour)`,
-        ...(hasPotato ? [`${scaleQty(2, 'medium')} aloo, boiled & mashed`] : []),
-        ...(hasPaneer ? [`${scaleQty(1, 'cup')} paneer, grated`] : []),
-        ...(!hasPotato && !hasPaneer ? ingredients.slice(0, 2).map(i => `${scaleQty(1, 'cup')} ${displayName(i)}, grated`) : []),
-        `${scaleQty(1, 'tsp')} jeera`,
-        `${scaleQty(1, 'tsp')} lal mirch`,
-        `${scaleQty(0.5, 'tsp')} haldi`,
-        `${scaleQty(2, 'tbsp')} hara dhaniya, chopped`,
-        `Namak swaad anusaar`,
-        `${scaleQty(4, 'tbsp')} ghee (for cooking)`
-      ],
-      instructions: [
-        `Atta mein paani, namak aur 1 tbsp ghee dalein. Soft dough banayein. 20 min rest dein.`,
-        `Filling ke liye sabzi/paneer mein jeera, lal mirch, haldi, dhaniya aur namak milayein.`,
-        `Dough ko chhote balls mein baantein. Har ball ko bel kar 3-inch circle banayein.`,
-        `Beech mein 2 tbsp filling rakhein. Edges ko utha kar band karein.`,
-        `Halke haath se bel kar 6-inch paratha banayein.`,
-        `Tawa garam karein. Paratha dalein aur dono taraf ghee laga kar golden-brown sekein.`,
-        `Garma-garam paratha dahi, achar ya makhan ke saath serve karein.`
-      ],
-      tips: [
-        'Filling mein paani nahi hona chahiye.',
-        'Dough ko zyada na belayen warna phatega.',
-        'Medium aanch par sekein — high flame pe jal jayega.',
-        `Perfect for ${serv} logon ke liye.`
-      ]
-    },
-    {
-      name: names.curry, description: descs.curry,
-      cuisine:'Indian', mealType:'Dinner', difficulty:'Medium',
-      servings: serv, prepTime:'15 mins', cookTime:'25 mins', totalTime:'40 mins',
-      ingredients: [
-        ...ingredients.map(i => `${scaleQty(1, 'cup')} ${displayName(i)}, cubed`),
-        `${scaleQty(3, 'medium')} pyaz, chopped`,
-        `${scaleQty(3, 'medium')} tamatar, pureed`,
-        `${scaleQty(0.5, 'cup')} dahi ya coconut milk`,
-        `${scaleQty(1, 'tbsp')} adrak-lehsun paste`,
-        `${scaleQty(1, 'tsp')} haldi`,
-        `${scaleQty(1, 'tsp')} garam masala`,
-        `${scaleQty(1, 'tsp')} lal mirch`,
-        `${scaleQty(2, 'tbsp')} oil`,
-        `Namak swaad anusaar`
-      ],
-      instructions: [
-        `Kadhai mein oil garam karein. Pyaz dalein aur golden brown bhunein (7-8 min).`,
-        `Adrak-lehsun paste dalein aur 1 min bhunein.`,
-        `Tamatar puree, haldi, lal mirch aur namak dalein. 5 min tak pakayein jab tak tel alag na ho.`,
-        `${dn.join(', ')} dalein aur 4-5 min bhunein.`,
-        `1 cup paani dalein aur dhak kar 12-15 min tak dhimi aanch par pakayein.`,
-        `Dahi ya coconut milk dalein aur 5 min aur pakayein.`,
-        `Garam masala dalein aur milayein.`,
-        `Hara dhaniya se sajayein aur naan ya chawal ke saath serve karein.`
-      ],
-      tips: [
-        'Gravy ko achhe se bhunein — restaurant style ke liye.',
-        'Kaju paste dalein creamy ke liye.',
-        'Aakhir mein kasuri methi dalein — khushbu badh jayegi.',
-        `Perfect for ${serv} logon ke liye.`
-      ]
-    }
+  return recipes.slice(0, 6);
+}
+
+function makeRecipe(dish, allIngredients, usedIngredientKeys, serv, scaled, lang, goal) {
+  const dishName = dish.name;
+  const emoji = dish.emoji || foodEmoji(dishName);
+
+  const ingList = [];
+  usedIngredientKeys.forEach(key => {
+    const display = displayName(key);
+    const qty = key === 'paneer' ? `${(200 * scaled).toFixed(0)}g` :
+                key === 'rice' ? `${(1 * scaled).toFixed(1)} cup` :
+                key === 'milk' ? `${(2 * scaled).toFixed(1)} cup` :
+                `${(1 * scaled).toFixed(1)} cup`;
+    ingList.push(`${qty} ${display}, chopped`);
+  });
+
+  const pantryAdds = [];
+  if (dishName.toLowerCase().includes('paratha')) {
+    pantryAdds.push(`${(2 * scaled).toFixed(1)} cups atta (wheat flour)`);
+    pantryAdds.push(`${(2 * scaled).toFixed(1)} tbsp ghee`);
+  } else if (dishName.toLowerCase().includes('pulao') || dishName.toLowerCase().includes('khichdi')) {
+    pantryAdds.push(`${(2 * scaled).toFixed(1)} cups basmati rice`);
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp jeera`);
+  } else if (dishName.toLowerCase().includes('raita')) {
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} cup dahi (yogurt)`);
+  } else if (dishName.toLowerCase().includes('chutney')) {
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp namak`);
+  } else {
+    pantryAdds.push(`${(2 * scaled).toFixed(1)} tbsp oil`);
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp jeera`);
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp haldi`);
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp dhaniya powder`);
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp lal mirch`);
+    pantryAdds.push(`${(1 * scaled).toFixed(1)} tsp garam masala`);
+    pantryAdds.push(`Namak swaad anusaar`);
+  }
+  ingList.push(...pantryAdds);
+
+  const missingOptional = OPTIONAL_PANTRY.filter(opt => {
+    return !allIngredients.some(i => String(i).toLowerCase().includes(opt));
+  }).slice(0, 3);
+
+  const optionalLine = missingOptional.length > 0
+    ? `\n\n💡 Optional: ${missingOptional.map(m => displayName(m)).join(', ')} — agar ghar mein ho toh daal dein.`
+    : '';
+
+  const instructions = lang === 'hi' ? [
+    `Sabziyan dho kar chhote tukdon mein kaat lein.`,
+    `Kadhai mein ${(2 * scaled).toFixed(1)} tbsp tel garam karein. Jeera dalein aur chatakne dein.`,
+    `${usedIngredientKeys.map(k => displayName(k)).join(', ')} dalein aur 4-5 min tak bhunein.`,
+    `Haldi, dhaniya powder, lal mirch, garam masala aur namak dalein. Achhe se milayein.`,
+    `1/4 cup paani dalein, dhak kar 8-10 min tak dhimi aanch par pakayein.`,
+    `Hara dhaniya se sajayein aur garma-garam serve karein.`
+  ] : [
+    `Wash and chop all vegetables into small pieces.`,
+    `Heat ${(2 * scaled).toFixed(1)} tbsp oil in a kadhai. Add jeera and let it crackle.`,
+    `Add ${usedIngredientKeys.map(k => displayName(k)).join(', ')} and sauté for 4-5 minutes.`,
+    `Add haldi, dhaniya powder, lal mirch, garam masala and salt. Mix well.`,
+    `Add 1/4 cup water, cover and cook on low flame for 8-10 minutes.`,
+    `Garnish with fresh coriander and serve hot.`
   ];
 
-  return templates.map((tpl, i) => {
-    const baseCal = 220 + (i * 40);
-    const basePro = 8 + (i % 3) * 4;
-    const baseCarb = 30 + (i * 5);
-    const baseFat = 8 + (i % 2) * 3;
-    // Scale nutrition by servings (base 4 people per recipe metric)
-    const scaleN = serv / 4;
-    return {
-      id: 'ghar_' + Date.now() + '_' + i + '_' + Math.random().toString(36).slice(2, 6),
-      name: tpl.name,
-      description: tpl.description,
-      cuisine: tpl.cuisine,
-      mealType: tpl.mealType,
-      difficulty: tpl.difficulty,
-      servings: serv,
-      prepTime: tpl.prepTime,
-      cookTime: tpl.cookTime,
-      totalTime: tpl.totalTime,
-      ingredients: tpl.ingredients,
-      instructions: tpl.instructions,
-      tips: tpl.tips,
-      nutrition: {
-        calories: `${Math.round(baseCal * scaleN)} kcal`,
-        protein: `${Math.round(basePro * scaleN)}g`,
-        carbs: `${Math.round(baseCarb * scaleN)}g`,
-        fat: `${Math.round(baseFat * scaleN)}g`
-      },
-      goal: g,
-      servingsCount: serv
-    };
-  });
+  const tips = lang === 'hi' ? [
+    `Sabzi ko zyada na pakayein — thodi crunchy honi chahiye.`,
+    `Aakhir mein nimbu ka ras dalein — swaad badh jayega.`,
+    `Yeh recipe ${serv} logon ke liye perfect hai.${optionalLine}`
+  ] : [
+    `Don't overcook the vegetables — they should stay slightly crunchy.`,
+    `Add a squeeze of lemon at the end for extra flavour.`,
+    `This recipe is perfect for ${serv} people.${optionalLine}`
+  ];
+
+  const baseCal = 180 + usedIngredientKeys.length * 40;
+  const basePro = 6 + (usedIngredientKeys.includes('paneer') ? 12 : 0) + usedIngredientKeys.length * 2;
+  const baseCarb = 25 + usedIngredientKeys.length * 5;
+  const baseFat = 6 + usedIngredientKeys.length * 2;
+
+  return {
+    id: 'ghar_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+    name: dishName,
+    description: dish.desc || `${dishName} — ghar jaisa khana, ${serv} logon ke liye.`,
+    cuisine: 'Indian',
+    mealType: dish.type || 'Lunch',
+    difficulty: dish.difficulty || 'Easy',
+    servings: serv,
+    prepTime: '15 mins',
+    cookTime: `${dish.time || 25} mins`,
+    totalTime: `${(dish.time || 25) + 15} mins`,
+    ingredients: ingList,
+    instructions,
+    tips,
+    nutrition: {
+      calories: `${Math.round(baseCal * scaled)} kcal`,
+      protein: `${Math.round(basePro * scaled)}g`,
+      carbs: `${Math.round(baseCarb * scaled)}g`,
+      fat: `${Math.round(baseFat * scaled)}g`
+    },
+    goal,
+    servingsCount: serv,
+    matchedIngredients: usedIngredientKeys.map(k => displayName(k))
+  };
 }
 
 /* ============================================================
@@ -1437,6 +1563,9 @@ function renderRecipeCards(recipes) {
     const isFav = state.favorites.some(f => f.id === r.id);
     const emoji = foodEmoji(r.name);
     const proteinNum = parseInt(r.nutrition.protein) || 0;
+    const matchedBadge = r.matchedIngredients && r.matchedIngredients.length > 0
+      ? `<span class="badge" style="background:#e3efe5;color:#2d5d3a;"><i class="fas fa-check-circle"></i> ${r.matchedIngredients.join(', ')}</span>`
+      : '';
     return `
       <article class="recipe-card" style="animation-delay:${i * 0.06}s;" data-id="${esc(r.id)}">
         <div class="recipe-emoji-hero">
@@ -1454,6 +1583,7 @@ function renderRecipeCards(recipes) {
             <span class="badge gray">${esc(r.cuisine)}</span>
             <span class="badge servings"><i class="fas fa-users"></i> ${r.servings} ${r.servings === 1 ? t('person') : t('people')}</span>
             ${proteinNum >= 15 ? `<span class="badge protein"><i class="fas fa-dumbbell"></i> ${proteinNum}g</span>` : ''}
+            ${matchedBadge}
           </div>
           <button type="button" class="btn-view" data-open-id="${esc(r.id)}">${t('viewRecipe')} <i class="fas fa-arrow-right"></i></button>
         </div>
@@ -2049,10 +2179,9 @@ window.addEventListener('popstate', () => {
 });
 
 /* ============================================================
-   INIT — binds ALL nav buttons before app shows
+   INIT
    ============================================================ */
 function bindAllEvents() {
-  // Nav buttons
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
@@ -2062,7 +2191,6 @@ function bindAllEvents() {
     });
   });
 
-  // Header buttons
   const favHeaderBtn = document.getElementById('favHeaderBtn');
   if (favHeaderBtn) {
     favHeaderBtn.addEventListener('click', (e) => {
@@ -2115,7 +2243,6 @@ window.addEventListener('load', () => {
     if (langChosen === 'true') {
       initApp();
     } else {
-      // Bind nav BEFORE showing lang modal so buttons work
       bindAllEvents();
       showLanguageModal();
       loadStorage();
