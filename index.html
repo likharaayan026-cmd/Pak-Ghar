@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<title>PakGhar • Ghar Jaisa Khana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#fdf9f3;--bg-gradient:linear-gradient(180deg,#fdf9f3 0%,#fefcf9 100%);
+  --surface:#ffffff;--surface-warm:#fdf6ef;--surface-glass:rgba(255,255,255,0.85);
+  --text-primary:#2a1f1a;--text-secondary:#5c4a40;--text-muted:#8b7a70;
+  --accent:#c65d3b;--accent-2:#a8492a;--accent-warm:#e07a4f;--accent-soft:#fbe9df;
+  --green:#25d366;--green-2:#128c7e;
+  --accent-glow:rgba(198,93,59,0.28);
+  --border:#eadfd2;--border-strong:#d9c8b5;
+  --shadow-xs:0 1px 2px rgba(60,40,25,0.05);--shadow-sm:0 2px 8px rgba(60,40,25,0.06);
+  --shadow-md:0 8px 24px rgba(60,40,25,0.09);--shadow-lg:0 20px 50px rgba(60,40,25,0.13);
+  --shadow-warm:0 10px 32px rgba(198,93,59,0.22);
+  --radius:24px;--radius-sm:16px;
+  --font:'Poppins','Inter',system-ui,-apple-system,sans-serif;
+  --font-display:'Playfair Display','Poppins',serif;
+  --nav-h:76px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);background-image:var(--bg-gradient);
+  background-attachment:fixed;color:var(--text-primary);line-height:1.55;min-height:100vh;
+  overflow-x:hidden;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 20px);
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+button,input,select{font-family:var(--font)}
+
+/* ===== LANGUAGE MODAL ===== */
+.lang-modal{position:fixed;inset:0;z-index:11000;background:linear-gradient(160deg,#2a1f1a 0%,#1a1008 100%);display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity 0.5s,visibility 0.5s;overflow:hidden}
+.lang-modal.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.lang-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lang-particle{position:absolute;font-size:22px;opacity:0;animation:floatUpLang linear infinite;filter:drop-shadow(0 0 12px rgba(224,122,79,0.5))}
+@keyframes floatUpLang{0%{transform:translateY(100vh) rotate(0deg) scale(0.6);opacity:0}10%{opacity:0.9}90%{opacity:0.9}100%{transform:translateY(-20vh) rotate(360deg) scale(1.1);opacity:0}}
+.lang-card{background:rgba(255,250,245,0.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,250,245,0.12);border-radius:28px;padding:32px 24px 28px;max-width:420px;width:100%;text-align:center;animation:langCardIn 0.7s cubic-bezier(.34,1.56,.64,1);position:relative;z-index:2;box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+@keyframes langCardIn{0%{opacity:0;transform:scale(0.85) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.lang-logo{font-size:64px;line-height:1;margin-bottom:14px;filter:drop-shadow(0 0 30px rgba(224,122,79,0.7));animation:logoBounce 2s ease-in-out infinite}
+@keyframes logoBounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.lang-title{font-size:1.75rem;font-weight:700;color:#fefcf9;letter-spacing:-0.5px;margin-bottom:6px;font-family:var(--font-display)}
+.lang-title span{background:linear-gradient(135deg,#e07a4f,#f0b27a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lang-sub{color:#b0a096;font-size:0.88rem;margin-bottom:26px}
+.lang-options{display:flex;flex-direction:column;gap:12px}
+.lang-btn{padding:16px 20px;border-radius:18px;border:1.5px solid rgba(224,122,79,0.3);background:rgba(224,122,79,0.08);color:#fefcf9;font-size:1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.3s;text-align:left}
+.lang-btn:hover{background:rgba(224,122,79,0.18);border-color:#e07a4f;transform:translateY(-2px)}
+.lang-btn:active{transform:scale(0.97)}
+.lang-btn .flag{font-size:1.6rem}
+.lang-btn .lang-name{font-weight:700}
+.lang-btn .lang-desc{font-size:0.75rem;color:#b0a096;font-weight:400;margin-top:2px}
+.lang-btn .lang-arrow{margin-left:auto;color:#e07a4f;font-size:1.1rem}
+
+/* Language switch overlay */
+.lang-switch-overlay{position:fixed;inset:0;z-index:12000;background:linear-gradient(160deg,#2a1f1a 0%,#1a1008 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;visibility:hidden;transition:opacity 0.35s ease,visibility 0.35s;pointer-events:none}
+.lang-switch-overlay.active{opacity:1;visibility:visible;pointer-events:auto}
+.lang-switch-icon{font-size:5rem;margin-bottom:18px;animation:langIconSpin 1s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes langIconSpin{0%{transform:rotate(-180deg) scale(0.3);opacity:0}60%{transform:rotate(10deg) scale(1.1);opacity:1}100%{transform:rotate(0) scale(1);opacity:1}}
+.lang-switch-text{font-size:1.3rem;font-weight:700;color:#fefcf9;font-family:var(--font-display)}
+.lang-switch-text span{background:linear-gradient(135deg,#e07a4f,#f0b27a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lang-switch-sub{font-size:0.85rem;color:#b0a096;margin-top:6px}
+.lang-switch-dots{display:flex;gap:8px;margin-top:26px}
+.lang-switch-dots span{width:8px;height:8px;border-radius:50%;background:#e07a4f;animation:langDotBounce 1.3s infinite ease-in-out}
+.lang-switch-dots span:nth-child(2){animation-delay:0.18s}
+.lang-switch-dots span:nth-child(3){animation-delay:0.36s}
+@keyframes langDotBounce{0%,80%,100%{transform:scale(0.5);opacity:0.35}40%{transform:scale(1.15);opacity:1}}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:10000;background:linear-gradient(160deg,#2a1f1a 0%,#1a1008 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.7s cubic-bezier(.4,0,.2,1),visibility 0.7s}
+#splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.splash-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;font-size:22px;opacity:0;animation:floatUp linear infinite;filter:drop-shadow(0 0 12px rgba(224,122,79,0.5))}
+@keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg) scale(0.6);opacity:0}10%{opacity:0.9}90%{opacity:0.9}100%{transform:translateY(-20vh) rotate(360deg) scale(1.1);opacity:0}}
+.splash-logo-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.splash-logo-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(224,122,79,0.25);animation:ringPulse 2s ease-out infinite}
+.splash-logo-ring:nth-child(2){animation-delay:0.6s}
+@keyframes ringPulse{0%{transform:scale(0.6);opacity:0.8}100%{transform:scale(1.6);opacity:0}}
+.splash-logo{font-size:74px;line-height:1;animation:logoIn 1.1s cubic-bezier(.34,1.56,.64,1) forwards;filter:drop-shadow(0 0 30px rgba(224,122,79,0.7));z-index:2}
+@keyframes logoIn{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.15) rotate(8deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.splash-title{font-size:2.6rem;font-weight:700;letter-spacing:-1px;color:#fefcf9;font-family:var(--font-display);opacity:0;animation:fadeInUp 0.7s 0.4s ease-out forwards;z-index:2}
+.splash-title span{background:linear-gradient(135deg,#e07a4f,#f0b27a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.splash-sub{font-size:0.95rem;color:#b0a096;margin-top:6px;opacity:0;animation:fadeInUp 0.7s 0.6s ease-out forwards;z-index:2}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.splash-dots{display:flex;gap:9px;margin-top:36px;opacity:0;animation:fadeInUp 0.7s 0.8s ease-out forwards;z-index:2}
+.splash-dots span{width:9px;height:9px;border-radius:50%;background:#e07a4f;animation:dotBounce 1.3s infinite ease-in-out}
+.splash-dots span:nth-child(2){animation-delay:0.18s}
+.splash-dots span:nth-child(3){animation-delay:0.36s}
+@keyframes dotBounce{0%,80%,100%{transform:scale(0.5);opacity:0.35}40%{transform:scale(1.15);opacity:1}}
+
+/* APP */
+#app{max-width:1240px;margin:0 auto;padding:14px 16px 20px;min-height:100vh;opacity:0;transition:opacity 0.6s ease}
+#app.ready{opacity:1}
+.app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-top:8px;position:sticky;top:0;z-index:40;background:linear-gradient(180deg,var(--bg) 70%,transparent);padding-bottom:12px}
+.header-left{display:flex;flex-direction:column;gap:2px}
+.header-greeting{font-size:0.78rem;color:var(--text-muted);font-weight:500}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.35rem;letter-spacing:-0.5px;font-family:var(--font-display)}
+.brand-icon{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#f5e6d8,#eadfd2);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:1.05rem;box-shadow:var(--shadow-sm)}
+.header-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.25s;box-shadow:var(--shadow-xs);position:relative}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent)}
+.icon-btn:active{transform:scale(0.92)}
+.icon-btn .dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#ef4444;display:none;border:2px solid var(--surface)}
+.icon-btn.has-dot .dot{display:block}
+.glass-card{background:var(--surface-glass);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.hero{padding:24px 22px 26px;position:relative;overflow:hidden;margin-bottom:16px;background:var(--surface)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:60px;background:var(--accent-soft);color:var(--accent-2);font-size:0.7rem;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;text-transform:uppercase}
+.hero-title{font-size:1.9rem;font-weight:700;letter-spacing:-0.8px;line-height:1.15;margin-bottom:8px;font-family:var(--font-display)}
+.hero-title .accent-text{color:var(--accent);font-style:italic}
+.hero-sub{color:var(--text-secondary);font-size:0.9rem;margin-bottom:20px;line-height:1.5}
+.input-wrap{position:relative;margin-bottom:12px;z-index:3}
+.input-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.95rem;pointer-events:none}
+.input-field{width:100%;padding:15px 52px 15px 46px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface-warm);color:var(--text-primary);font-size:0.94rem;font-weight:500;outline:none;transition:all 0.25s;box-shadow:var(--shadow-xs)}
+.input-field:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);background:var(--surface)}
+.input-add-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px var(--accent-glow)}
+.autocomplete-box{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);max-height:220px;overflow-y:auto;z-index:100;display:none}
+.autocomplete-box.show{display:block}
+.ac-item{padding:11px 18px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;gap:10px;color:var(--text-secondary)}
+.ac-item:hover{background:var(--accent-soft);color:var(--accent-2)}
+.ac-item .ac-emoji{font-size:1.05rem}
+.ac-item .ac-add{margin-left:auto;font-size:0.72rem;color:var(--text-muted)}
+.ac-item .ac-alias{font-size:0.7rem;color:var(--text-muted);margin-left:4px}
+.chips-container{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 16px;min-height:36px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 8px 8px 14px;background:var(--accent-soft);color:var(--accent-2);border-radius:60px;font-size:0.85rem;font-weight:600;border:1px solid rgba(198,93,59,0.15);animation:chipPop 0.35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes chipPop{0%{transform:scale(0.5) translateY(6px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+.chip .chip-emoji{font-size:0.95rem}
+.chip .chip-remove{width:20px;height:20px;border-radius:50%;border:none;background:rgba(198,93,59,0.15);color:var(--accent-2);font-size:0.62rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chip .chip-remove:hover{background:var(--accent);color:#fff}
+.section-label{font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-label i{color:var(--accent);font-size:0.8rem}
+.suggestions{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.suggestion-chip{padding:8px 15px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-secondary);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:6px}
+.suggestion-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);transform:translateY(-2px)}
+.suggestion-chip.added{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Servings selector */
+.servings-selector{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.serving-btn{flex:1;min-width:70px;padding:12px 8px;border-radius:16px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-secondary);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.25s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.serving-btn .serving-num{font-size:1.15rem;font-weight:800;color:var(--text-primary);font-family:var(--font-display);line-height:1}
+.serving-btn .serving-label{font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;font-weight:700}
+.serving-btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+.serving-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:var(--accent);box-shadow:0 6px 18px var(--accent-glow)}
+.serving-btn.active .serving-num,
+.serving-btn.active .serving-label{color:#fff}
+
+.goal-selector{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin-bottom:4px;scrollbar-width:none}
+.goal-selector::-webkit-scrollbar{display:none}
+.goal-chip{flex-shrink:0;padding:9px 16px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-secondary);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.goal-chip.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:var(--accent);box-shadow:0 6px 18px var(--accent-glow)}
+.btn-primary{width:100%;padding:16px;border-radius:60px;border:none;background:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 100%);color:#fff;font-weight:700;font-size:1rem;letter-spacing:0.3px;cursor:pointer;box-shadow:0 8px 24px var(--accent-glow);transition:all 0.3s;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-primary:active{transform:scale(0.97)}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed}
+.btn-primary .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.4);transform:scale(0);animation:rippleAnim 0.7s linear;pointer-events:none}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0}}
+.section-title{font-size:1.15rem;font-weight:700;letter-spacing:-0.3px;margin:24px 0 14px;display:flex;align-items:center;gap:10px;font-family:var(--font-display)}
+.section-title i{color:var(--accent);font-size:1rem}
+.category-scroll{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
+.category-scroll::-webkit-scrollbar{display:none}
+.category-card{flex:0 0 auto;padding:12px 18px;border-radius:16px;background:var(--surface);border:1.5px solid var(--border);font-weight:600;font-size:0.83rem;color:var(--text-secondary);cursor:pointer;transition:all 0.3s;white-space:nowrap;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-xs)}
+.category-card:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.recipe-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px}
+@media(min-width:560px){.recipe-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:940px){.recipe-grid{grid-template-columns:1fr 1fr 1fr}}
+.recipe-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform 0.35s,box-shadow 0.3s;cursor:pointer;animation:cardIn 0.55s cubic-bezier(.34,1.56,.64,1) backwards;display:flex;flex-direction:column;position:relative}
+@keyframes cardIn{0%{opacity:0;transform:translateY(28px) scale(0.94)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.recipe-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.recipe-emoji-hero{height:140px;background:linear-gradient(135deg,#fef3e6,#fbe0cd);display:flex;align-items:center;justify-content:center;font-size:4.5rem;position:relative;overflow:hidden}
+.recipe-emoji-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.5),transparent 60%)}
+.recipe-emoji-hero .emoji-big{position:relative;z-index:2;animation:emojiFloat 3.5s ease-in-out infinite}
+@keyframes emojiFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+.recipe-time-badge{position:absolute;top:12px;left:12px;padding:6px 12px;border-radius:60px;background:rgba(253,249,243,0.95);backdrop-filter:blur(8px);font-size:0.72rem;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:5px;box-shadow:var(--shadow-sm);z-index:3}
+.recipe-time-badge i{color:var(--accent)}
+.recipe-fav-float{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;background:rgba(253,249,243,0.95);backdrop-filter:blur(8px);color:var(--text-muted);font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;box-shadow:var(--shadow-sm);z-index:3}
+.recipe-fav-float.active{color:#c65d3b}
+.recipe-body{padding:16px;flex:1;display:flex;flex-direction:column}
+.recipe-name{font-weight:700;font-size:1.02rem;margin-bottom:5px;color:var(--text-primary);line-height:1.3;font-family:var(--font-display)}
+.recipe-desc{font-size:0.79rem;color:var(--text-muted);margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.45}
+.recipe-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;margin-bottom:12px}
+.badge{padding:4px 10px;border-radius:60px;font-size:0.68rem;font-weight:700;background:var(--accent-soft);color:var(--accent-2);display:inline-flex;align-items:center;gap:4px}
+.badge.gray{background:var(--surface-warm);color:var(--text-secondary)}
+.badge.protein{background:#fef3c7;color:#b45309}
+.badge.servings{background:#e3efe5;color:#2d5d3a}
+.btn-view{width:100%;padding:11px;border-radius:60px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-weight:700;font-size:0.83rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-view:hover{background:var(--accent);color:#fff}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.85rem}
+.search-input{width:100%;padding:12px 16px 12px 40px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-primary);font-size:0.86rem;outline:none;font-weight:500}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.sort-select{padding:12px 34px 12px 16px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-primary);font-size:0.85rem;font-weight:600;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b7a70' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.filter-chip{padding:8px 15px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-secondary);font-size:0.77rem;font-weight:600;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:5px}
+.filter-chip.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:var(--accent);box-shadow:0 6px 16px var(--accent-glow)}
+.detail-view{animation:detailIn 0.5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes detailIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.back-btn{padding:10px 18px;border-radius:60px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-primary);font-size:0.86rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin-bottom:16px}
+.back-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateX(-3px)}
+
+/* Detail Hero with big emoji */
+.detail-hero-emoji{height:200px;border-radius:var(--radius);position:relative;overflow:hidden;margin-bottom:18px;background:linear-gradient(135deg,#fef3e6,#fbe0cd);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
+.detail-hero-emoji::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.6),transparent 60%)}
+.detail-hero-emoji .emoji-huge{font-size:7rem;position:relative;z-index:2;animation:emojiFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(198,93,59,0.25))}
+.detail-hero-emoji .detail-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(198,93,59,0.15) 100%)}
+
+.detail-name{font-size:1.7rem;font-weight:700;letter-spacing:-0.6px;margin-bottom:8px;line-height:1.2;font-family:var(--font-display)}
+.detail-desc{color:var(--text-secondary);font-size:0.92rem;margin-bottom:16px;line-height:1.55}
+.detail-badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.detail-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow-xs)}
+.detail-section h3{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-family:var(--font-display)}
+.detail-section h3 i{color:var(--accent);width:32px;height:32px;background:var(--accent-soft);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.85rem}
+.ingredient-check{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.ingredient-check:last-child{border-bottom:none}
+.ingredient-check input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:7px;border:2px solid var(--border-strong);cursor:pointer;flex-shrink:0;position:relative}
+.ingredient-check input[type="checkbox"]:checked{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:var(--accent)}
+.ingredient-check input[type="checkbox"]:checked::after{content:'✓';position:absolute;inset:0;color:#fff;font-size:0.85rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ingredient-check label{font-size:0.89rem;color:var(--text-secondary);cursor:pointer;font-weight:500}
+.ingredient-check.checked label{text-decoration:line-through;opacity:0.5}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.time-item{background:var(--accent-soft);border-radius:var(--radius-sm);padding:16px 8px;text-align:center;border:1px solid rgba(198,93,59,0.1)}
+.time-value{font-weight:800;font-size:1.02rem;color:var(--accent-2)}
+.time-label{font-size:0.66rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-top:4px;font-weight:700}
+.instruction-step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.instruction-step:last-child{border-bottom:none}
+.step-num{font-size:1.25rem;font-weight:800;color:var(--accent);min-width:42px;background:var(--accent-soft);height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display)}
+.step-text{font-size:0.89rem;color:var(--text-secondary);line-height:1.65;padding-top:8px;font-weight:500}
+.tips-list{list-style:none}
+.tips-list li{padding:10px 0;font-size:0.87rem;color:var(--text-secondary);display:flex;gap:12px;line-height:1.55}
+.tips-list li::before{content:"💡";font-size:1rem;flex-shrink:0}
+.nutrition-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.nutri-card{background:var(--accent-soft);border-radius:var(--radius-sm);padding:16px 6px;text-align:center;border:1px solid rgba(198,93,59,0.1)}
+.nutri-value{font-weight:800;font-size:1.02rem;color:var(--accent-2)}
+.nutri-label{font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;margin-top:4px;font-weight:700}
+
+/* WhatsApp share button */
+.btn-share{width:100%;padding:16px;border-radius:60px;border:none;background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);color:#fff;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,0.35);transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px}
+.btn-share:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,211,102,0.45)}
+.btn-share:active{transform:scale(0.97)}
+.btn-share i{font-size:1.25rem}
+
+.empty-state{text-align:center;padding:56px 20px;color:var(--text-muted)}
+.empty-icon{width:88px;height:88px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:2.2rem;animation:floatIcon 3s ease-in-out infinite}
+@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.empty-state h3{font-size:1.05rem;color:var(--text-primary);margin-bottom:6px;font-weight:700;font-family:var(--font-display)}
+.empty-state p{font-size:0.87rem;max-width:280px;margin:0 auto}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:12px;left:12px;right:12px;height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom,0px);background:rgba(253,249,243,0.96);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--border);border-radius:24px;display:flex;align-items:center;justify-content:space-around;z-index:100;box-shadow:0 12px 40px rgba(60,40,25,0.1);max-width:500px;margin:0 auto;transition:transform 0.28s cubic-bezier(.4,0,.2,1),opacity 0.24s;will-change:transform}
+body.keyboard-open .bottom-nav{transform:translateY(calc(100% + 30px)) !important;opacity:0 !important;pointer-events:none !important}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:14px;cursor:pointer;transition:all 0.3s;color:var(--text-muted);font-size:0.66rem;font-weight:700;background:transparent;border:none;min-width:58px;position:relative;font-family:var(--font)}
+.nav-item i{font-size:1.25rem;transition:transform 0.35s}
+.nav-item.active{color:#c65d3b}
+.nav-item.active i{transform:translateY(-2px) scale(1.1)}
+.nav-item.active::before{content:'';position:absolute;top:-1px;width:26px;height:3px;border-radius:0 0 6px 6px;background:#c65d3b}
+
+.toast-container{position:fixed;top:14px;left:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:400px;margin:0 auto}
+.toast{padding:14px 18px;border-radius:16px;background:rgba(253,249,243,0.98);backdrop-filter:blur(20px);border:1px solid var(--border);box-shadow:0 12px 40px rgba(60,40,25,0.15);color:var(--text-primary);font-size:0.86rem;font-weight:600;display:flex;align-items:center;gap:12px;animation:toastIn 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;border-left:4px solid var(--accent)}
+.toast.error{border-left-color:#ef4444}
+.toast.warning{border-left-color:#f59e0b}
+.toast.info{border-left-color:#3b82f6}
+@keyframes toastIn{from{opacity:0;transform:translateY(-24px) scale(0.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+.toast.out{animation:toastOut 0.35s ease-in forwards}
+@keyframes toastOut{to{opacity:0;transform:translateY(-20px) scale(0.92)}}
+
+.loading-overlay{position:fixed;inset:0;z-index:9000;background:rgba(253,249,243,0.85);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:20px}
+.loading-overlay.hidden{display:none}
+.loader-anim{position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center}
+.loader-plate{position:absolute;width:100px;height:100px;border-radius:50%;border:3px dashed var(--accent);animation:spinPlate 4s linear infinite}
+@keyframes spinPlate{to{transform:rotate(360deg)}}
+.loader-chef{font-size:3.4rem;animation:bounceChef 0.9s infinite alternate cubic-bezier(.34,1.56,.64,1)}
+@keyframes bounceChef{from{transform:translateY(0) rotate(-6deg)}to{transform:translateY(-14px) rotate(6deg)}}
+.loader-text{font-size:1.05rem;font-weight:700;color:var(--text-primary);font-family:var(--font-display)}
+.loader-sub{font-size:0.83rem;color:var(--text-secondary);font-weight:500;text-align:center}
+.loader-progress{width:200px;height:4px;border-radius:4px;background:var(--accent-soft);overflow:hidden}
+.loader-progress-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent-warm));animation:progressMove 1.8s ease-in-out infinite}
+@keyframes progressMove{0%{width:10%}50%{width:85%}100%{width:10%}}
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat-card{padding:14px 10px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);text-align:center;box-shadow:var(--shadow-xs)}
+.stat-value{font-size:1.15rem;font-weight:800;color:var(--accent);font-family:var(--font-display)}
+.stat-label{font-size:0.63rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.6px;font-weight:700;margin-top:2px}
+.disclaimer{background:linear-gradient(135deg,#fef3c7,#fef9e7);border:1px solid #fde68a;border-radius:var(--radius-sm);padding:16px;margin:14px 0;display:flex;gap:12px}
+.disclaimer i{color:#d97706;font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.disclaimer-content h4{font-size:0.88rem;font-weight:700;color:#92400e;margin-bottom:6px}
+.disclaimer-content p{font-size:0.78rem;color:#78350f;line-height:1.6}
+.hidden{display:none !important}
+.flex-between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mb-16{margin-bottom:16px}
+@media(min-width:768px){#app{padding:20px 32px 32px}.hero-title{font-size:2.3rem}.detail-name{font-size:2rem}}
+</style>
+</head>
+<body>
+
+<div class="lang-modal hidden" id="langModal">
+  <div class="lang-particles" id="langParticles"></div>
+  <div class="lang-card">
+    <div class="lang-logo">🍲</div>
+    <div class="lang-title">Welcome to <span>PakGhar</span></div>
+    <div class="lang-sub">Apni bhasha chunein / Choose your language</div>
+    <div class="lang-options">
+      <button type="button" class="lang-btn" data-lang="en">
+        <span class="flag">🇬🇧</span>
+        <div><div class="lang-name">English</div><div class="lang-desc">Search in English (Potato, Tomato)</div></div>
+        <i class="fas fa-arrow-right lang-arrow"></i>
+      </button>
+      <button type="button" class="lang-btn" data-lang="hi">
+        <span class="flag">🇮🇳</span>
+        <div><div class="lang-name">Hinglish</div><div class="lang-desc">Hindi naam se search karein (Aloo, Tamatar)</div></div>
+        <i class="fas fa-arrow-right lang-arrow"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="lang-switch-overlay" id="langSwitchOverlay">
+  <div class="lang-switch-icon" id="langSwitchIcon">🌐</div>
+  <div class="lang-switch-text" id="langSwitchText">Switching to <span>Hinglish</span></div>
+  <div class="lang-switch-sub" id="langSwitchSub">Language is changing...</div>
+  <div class="lang-switch-dots"><span></span><span></span><span></span></div>
+</div>
+
+<div id="splash">
+  <div class="splash-particles" id="splashParticles"></div>
+  <div class="splash-logo-wrap">
+    <div class="splash-logo-ring"></div>
+    <div class="splash-logo-ring"></div>
+    <div class="splash-logo">🍲</div>
+  </div>
+  <div class="splash-title">Pak<span>Ghar</span></div>
+  <div class="splash-sub">Ghar jaisa khana, AI ke saath</div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
+</div>
+
+<div id="app" class="hidden">
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-greeting" id="headerGreeting">Good evening</div>
+      <div class="brand">
+        <div class="brand-icon"><i class="fas fa-utensils"></i></div>
+        PakGhar
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="icon-btn" id="langSwitchBtn"><i class="fas fa-language"></i></button>
+      <button type="button" class="icon-btn" id="favHeaderBtn">
+        <i class="fas fa-heart"></i>
+        <span class="dot" id="favDot"></span>
+      </button>
+    </div>
+  </header>
+  <main id="mainContent"></main>
+</div>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button type="button" class="nav-item active" data-tab="home"><i class="fas fa-house"></i> <span id="navHomeLabel">Home</span></button>
+  <button type="button" class="nav-item" data-tab="favorites"><i class="fas fa-heart"></i> <span id="navFavLabel">Favorites</span></button>
+  <button type="button" class="nav-item" data-tab="history"><i class="fas fa-clock-rotate-left"></i> <span id="navHistLabel">History</span></button>
+  <button type="button" class="nav-item" data-tab="about"><i class="fas fa-circle-info"></i> <span id="navAboutLabel">About</span></button>
+</nav>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="loader-anim">
+    <div class="loader-plate"></div>
+    <div class="loader-chef">👨‍🍳</div>
+  </div>
+  <div class="loader-text" id="loaderText">Cooking up some ideas...</div>
+  <div class="loader-sub" id="loaderSub">Checking your ingredients...</div>
+  <div class="loader-progress"><div class="loader-progress-bar"></div></div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBt3iYcR4SijEJqtrBlH8mNr292vakgJFQ",
+  authDomain: "figo-movies.firebaseapp.com",
+  databaseURL: "https://figo-movies-default-rtdb.firebaseio.com",
+  projectId: "figo-movies",
+  storageBucket: "figo-movies.firebasestorage.app",
+  messagingSenderId: "425238806262",
+  appId: "1:425238806262:web:7d23814e4b550695bb76d7"
+};
+
+let firebaseDB = null, firebaseReady = false;
+try {
+  firebase.initializeApp(firebaseConfig);
+  firebaseDB = firebase.database();
+  firebaseReady = true;
+} catch (e) { console.warn("Firebase skipped:", e); }
+
+/* ============================================================
+   TRANSLATIONS
+   ============================================================ */
+const T = {
+  en: {
+    greeting:"Good evening", heroTitle:"What's in", heroTitleAccent:"your kitchen?",
+    heroSub:"Add your ingredients and get real ghar-jaisa khana recipes.",
+    inputPlaceholder:"Type an ingredient... e.g. Potato", quickAdd:"Quick Add",
+    howManyPeople:"How many people are eating?", cookingGoal:"Cooking Goal",
+    generateBtn:"Generate Ghar-Jaisa Recipes", popularIdeas:"Popular Ideas",
+    recipesForYou:"Recipes For You", basedOn:"Based on", favorites:"Your Favorites",
+    recentRecipes:"Recent Recipes", about:"About", home:"Home", history:"History",
+    all:"All", indian:"Indian", healthy:"Healthy", quick:"Quick", easy:"Easy",
+    vegetarian:"Vegetarian", highProtein:"High Protein", balanced:"Balanced",
+    lowCarb:"Low Carb", weightLoss:"Weight Loss", searchPlaceholder:"Search recipes...",
+    quickest:"⚡ Quickest", easiest:"✅ Easiest", mostIngredients:"🥕 Most Ingredients",
+    highestProtein:"💪 Highest Protein", viewRecipe:"View Recipe", back:"Back",
+    ingredients:"Ingredients", preparation:"Preparation", instructions:"Instructions",
+    cookingTips:"Cooking Tips", nutrition:"Nutrition", perServing:"(per serving)",
+    prep:"Prep", cook:"Cook", total:"Total", calories:"Calories", protein:"Protein",
+    carbs:"Carbs", fat:"Fat", servings:"servings", loadingText:"Cooking up some ideas...",
+    addIngredient:"Please add at least one ingredient.", alreadyAdded:"Already added.",
+    enterIngredient:"Please enter an ingredient.", savedFav:"✓ Saved to favorites",
+    removedFav:"Removed from favorites", genFailed:"Recipe generation failed. Please try again.",
+    noRecipes:"No recipes found", noRecipesSub:"Try changing your filters or search term.",
+    noFavs:"No favorites yet", noFavsSub:"Tap the ♡ on any recipe card to save it for later.",
+    noHistory:"No history yet", noHistorySub:"Generate some recipes to see them here.",
+    tapHistory:"Tap any card to reload its recipes.", recipesLoaded:"Recipes loaded from history",
+    recipeNotFound:"Recipe not found.", generated:"recipes generated!", goalSet:"Goal",
+    exitApp:"Press back again to exit", developer:"Developer", version:"Version",
+    features:"Features", disclaimer:"Disclaimer", disclaimerTitle:"Please Read",
+    disclaimerText:"This application uses AI to generate recipe suggestions. Nutritional information is approximate and may vary. Always verify ingredients for allergies and dietary restrictions.",
+    switchingTo:"Switching to", switchingSub:"Language is changing...",
+    shareWhatsApp:"Share on WhatsApp", people:"people", person:"person",
+    selectPeople:"Please select how many people are eating.",
+    peopleSet:"Serving size set", forPeople:"for"
+  },
+  hi: {
+    greeting:"Namaste", heroTitle:"Aapki kitchen mein", heroTitleAccent:"kya hai?",
+    heroSub:"Apne ingredients add karein aur real ghar jaisa khana paiye.",
+    inputPlaceholder:"Ingredient likhein... jaise Aloo", quickAdd:"Quick Add",
+    howManyPeople:"Kitne logon ka khana hai?", cookingGoal:"Cooking Goal",
+    generateBtn:"Ghar Jaisa Khana Banayein", popularIdeas:"Popular Ideas",
+    recipesForYou:"Aapke Liye Recipes", basedOn:"Inke base par", favorites:"Aapke Favorites",
+    recentRecipes:"Recent Recipes", about:"App Ke Baare Mein", home:"Home", history:"History",
+    all:"Sab", indian:"Indian", healthy:"Healthy", quick:"Jaldi", easy:"Aasan",
+    vegetarian:"Vegetarian", highProtein:"High Protein", balanced:"Balanced",
+    lowCarb:"Low Carb", weightLoss:"Weight Loss", searchPlaceholder:"Recipes dhundhein...",
+    quickest:"⚡ Sabse Jaldi", easiest:"✅ Sabse Aasan", mostIngredients:"🥕 Zyada Ingredients",
+    highestProtein:"💪 Sabse Zyada Protein", viewRecipe:"Recipe Dekhein", back:"Wapas",
+    ingredients:"Ingredients", preparation:"Taiyari", instructions:"Banane Ka Tarika",
+    cookingTips:"Cooking Tips", nutrition:"Nutrition", perServing:"(per serving)",
+    prep:"Prep", cook:"Cook", total:"Total", calories:"Calories", protein:"Protein",
+    carbs:"Carbs", fat:"Fat", servings:"servings", loadingText:"Khana ban raha hai...",
+    addIngredient:"Kam se kam ek ingredient add karein.", alreadyAdded:"Pehle se add hai.",
+    enterIngredient:"Kripya ingredient likhein.", savedFav:"✓ Favorites mein save ho gaya",
+    removedFav:"Favorites se hata diya", genFailed:"Recipe nahi ban payi. Dobara try karein.",
+    noRecipes:"Koi recipe nahi mili", noRecipesSub:"Filters ya search badal ke dekhein.",
+    noFavs:"Abhi koi favorite nahi", noFavsSub:"Kisi bhi recipe card par ♡ dabayein.",
+    noHistory:"Abhi koi history nahi", noHistorySub:"Recipes generate karein.",
+    tapHistory:"Kisi bhi card par tap karein.", recipesLoaded:"History se recipes load ho gayi",
+    recipeNotFound:"Recipe nahi mili.", generated:"recipes ban gayi!", goalSet:"Goal",
+    exitApp:"Bahar nikalne ke liye dobara back dabayein", developer:"Developer", version:"Version",
+    features:"Features", disclaimer:"Disclaimer", disclaimerTitle:"Zaroor Padhein",
+    disclaimerText:"Yeh app AI ka use karke recipe suggestions deti hai. Nutrition ki jaankari approximate hai aur badal sakti hai. Allergy aur dietary restrictions ke liye ingredients zaroor check karein.",
+    switchingTo:"Switch ho raha hai", switchingSub:"Bhasha badli ja rahi hai...",
+    shareWhatsApp:"WhatsApp par Share Karein", people:"log", person:"aadmi",
+    selectPeople:"Kitne logon ka khana hai ye chunein.",
+    peopleSet:"Serving set ho gayi", forPeople:"ke liye"
+  }
+};
+
+const EN_TO_HI = {
+  'potato':'Aloo','tomato':'Tamatar','onion':'Pyaz','carrot':'Gajar','paneer':'Paneer',
+  'capsicum':'Shimla Mirch','spinach':'Palak','cauliflower':'Gobhi','peas':'Matar','corn':'Makka',
+  'garlic':'Lehsun','ginger':'Adrak','chilli':'Mirch','cabbage':'Bandh Gobhi','beans':'Sem',
+  'mushroom':'Mushroom','broccoli':'Broccoli','cucumber':'Kheera','lemon':'Nimbu','rice':'Chawal',
+  'flour':'Atta','egg':'Anda','chicken':'Chicken','cheese':'Cheese','butter':'Makhan','milk':'Doodh',
+  'coriander':'Dhaniya','oil':'Tel','salt':'Namak','water':'Paani','yogurt':'Dahi',
+  'chickpeas':'Chana','lentils':'Dal','quinoa':'Quinoa','avocado':'Avocado','tofu':'Tofu',
+  'sesame':'Til','honey':'Shahad','soy sauce':'Soy Sauce','coconut milk':'Nariyal Doodh',
+  'garam masala':'Garam Masala','turmeric':'Haldi','cumin':'Jeera','coriander powder':'Dhaniya Powder',
+  'red chilli powder':'Lal Mirch','ginger-garlic paste':'Adrak-Lehsun Paste',
+  'olive oil':'Olive Oil','lemon juice':'Nimbu Ras','mixed greens':'Mixed Greens',
+  'spring onion':'Hara Pyaz','greek yogurt':'Greek Dahi','vegetable stock':'Sabzi Stock'
+};
+const HI_TO_EN = {};
+Object.entries(EN_TO_HI).forEach(([en, hi]) => { HI_TO_EN[hi.toLowerCase()] = en; });
+
+function normalizeIngredient(input) {
+  const raw = input.trim();
+  const lower = raw.toLowerCase();
+  if (HI_TO_EN[lower]) return HI_TO_EN[lower];
+  const lowerCap = raw.charAt(0).toLowerCase() + raw.slice(1).toLowerCase();
+  if (HI_TO_EN[lowerCap]) return HI_TO_EN[lowerCap];
+  if (EN_TO_HI[lower]) return lower;
+  return raw.charAt(0).toUpperCase() + raw.slice(1);
+}
+function displayName(canonical) {
+  if (state.language === 'hi') {
+    const key = String(canonical).toLowerCase().trim();
+    if (EN_TO_HI[key]) return EN_TO_HI[key];
+    if (HI_TO_EN[key]) return canonical;
+    return canonical;
+  }
+  const key = String(canonical).toLowerCase().trim();
+  if (HI_TO_EN[key]) return HI_TO_EN[key];
+  return canonical;
+}
+function displayIngredientLine(line) {
+  if (state.language !== 'hi') return line;
+  let out = line;
+  Object.entries(EN_TO_HI).forEach(([en, hi]) => {
+    const re = new RegExp('\\b' + en.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+    out = out.replace(re, hi);
+  });
+  return out;
+}
+function t(key) { return (T[state.language] || T.en)[key] || key; }
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  currentTab:'home', language:'en', ingredients:[], generatedRecipes:[], currentRecipes:[],
+  searchQuery:'', activeFilter:'All', sortBy:'quickest', activeGoal:'balanced',
+  servings: 4,
+  favorites:[], history:[], viewingDetail:null, isLoading:false, backPressedOnce:false,
+  showRecipes:false, switchingLang:false
+};
+
+const LS = {
+  FAVORITES:'pakghar_fav_v4', HISTORY:'pakghar_hist_v4',
+  LANGUAGE:'pakghar_lang_v4', LANG_CHOSEN:'pakghar_lang_chosen_v4',
+  SERVINGS:'pakghar_servings_v4'
+};
+
+function loadStorage() {
+  try {
+    state.favorites = JSON.parse(localStorage.getItem(LS.FAVORITES) || '[]');
+    state.history = JSON.parse(localStorage.getItem(LS.HISTORY) || '[]');
+    const lang = localStorage.getItem(LS.LANGUAGE);
+    if (lang) state.language = lang;
+    const serv = parseInt(localStorage.getItem(LS.SERVINGS));
+    if (serv && serv > 0) state.servings = serv;
+  } catch(e){ console.warn(e); }
+}
+const saveFav = () => localStorage.setItem(LS.FAVORITES, JSON.stringify(state.favorites));
+const saveHist = () => localStorage.setItem(LS.HISTORY, JSON.stringify(state.history.slice(0,20)));
+const saveLang = () => localStorage.setItem(LS.LANGUAGE, state.language);
+const saveServ = () => localStorage.setItem(LS.SERVINGS, String(state.servings));
+
+/* ============================================================
+   UI UTILS
+   ============================================================ */
+function showToast(msg, type='success', dur=3000) {
+  const c = document.getElementById('toastContainer');
+  if (!c) return;
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const colors = { success:'#4a7c59', error:'#c65d3b', warning:'#d97706', info:'#3b82f6' };
+  el.innerHTML = `<i class="fas ${icons[type]||icons.info}" style="color:${colors[type]||colors.info};font-size:1.1rem"></i><span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 350); }, dur);
+}
+function attachRipple(btn) {
+  if (!btn) return;
+  btn.addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    const r = document.createElement('span');
+    r.className = 'ripple';
+    const size = Math.max(rect.width, rect.height);
+    r.style.width = r.style.height = size + 'px';
+    r.style.left = (e.clientX - rect.left - size/2) + 'px';
+    r.style.top = (e.clientY - rect.top - size/2) + 'px';
+    this.appendChild(r);
+    setTimeout(() => r.remove(), 700);
+  });
+}
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ return null; }
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playTune() {
+  const ctx = getAudioCtx(); if (!ctx) return;
+  const now = ctx.currentTime;
+  const notes = [{f:523.25,t:0.00,d:0.18},{f:659.25,t:0.15,d:0.18},{f:783.99,t:0.30,d:0.18},{f:1046.50,t:0.45,d:0.40}];
+  notes.forEach(n => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(n.f, now+n.t);
+    g.gain.setValueAtTime(0, now+n.t);
+    g.gain.linearRampToValueAtTime(0.12, now+n.t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001, now+n.t+n.d);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(now+n.t); o.stop(now+n.t+n.d+0.05);
+  });
+}
+function playDing() {
+  const ctx = getAudioCtx(); if (!ctx) return;
+  const now = ctx.currentTime;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(880, now);
+  o.frequency.exponentialRampToValueAtTime(1320, now+0.12);
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(0.1, now+0.02);
+  g.gain.exponentialRampToValueAtTime(0.001, now+0.35);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(now); o.stop(now+0.4);
+}
+function playClick() {
+  const ctx = getAudioCtx(); if (!ctx) return;
+  const now = ctx.currentTime;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type='triangle'; o.frequency.setValueAtTime(600, now);
+  o.frequency.exponentialRampToValueAtTime(300, now+0.08);
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(0.06, now+0.01);
+  g.gain.exponentialRampToValueAtTime(0.001, now+0.12);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(now); o.stop(now+0.15);
+}
+function playError() {
+  const ctx = getAudioCtx(); if (!ctx) return;
+  const now = ctx.currentTime;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type='sawtooth'; o.frequency.setValueAtTime(200, now);
+  o.frequency.linearRampToValueAtTime(120, now+0.25);
+  g.gain.setValueAtTime(0, now);
+  g.gain.linearRampToValueAtTime(0.08, now+0.02);
+  g.gain.exponentialRampToValueAtTime(0.001, now+0.3);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(now); o.stop(now+0.32);
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+const LOADER_MSGS = {
+  en:["Checking your ingredients...","Finding real ghar-jaisa recipes...","Preparing for your family...","Adding cooking instructions...","Almost there..."],
+  hi:["Ingredients check kar rahe hain...","Ghar jaisi recipes dhundh rahe hain...","Aapke parivaar ke liye tayyar kar rahe hain...","Cooking instructions add kar rahe hain...","Bas thoda sa aur..."]
+};
+let loaderTimer = null;
+function startLoader() {
+  let i = 0;
+  const el = document.getElementById('loaderSub');
+  const msgs = LOADER_MSGS[state.language] || LOADER_MSGS.en;
+  el.textContent = msgs[0];
+  loaderTimer = setInterval(() => { i = (i+1) % msgs.length; el.textContent = msgs[i]; }, 2000);
+}
+function stopLoader() { if (loaderTimer) { clearInterval(loaderTimer); loaderTimer = null; } }
+function showLoading(show) {
+  document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+  document.getElementById('loaderText').textContent = t('loadingText');
+  if (show) startLoader(); else stopLoader();
+}
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+function foodEmoji(name) {
+  const n = (name || '').toLowerCase();
+  if (n.includes('biryani') || n.includes('pulao')) return '🍚';
+  if (n.includes('paneer')) return '🧀';
+  if (n.includes('aloo') || n.includes('potato')) return '🥔';
+  if (n.includes('gobi') || n.includes('cauliflower')) return '🥦';
+  if (n.includes('matar') || n.includes('peas')) return '🫛';
+  if (n.includes('dal') || n.includes('lentil')) return '🥣';
+  if (n.includes('chole') || n.includes('chana')) return '🫘';
+  if (n.includes('rajma')) return '🫘';
+  if (n.includes('khichdi')) return '🍲';
+  if (n.includes('paratha')) return '🥞';
+  if (n.includes('roti') || n.includes('chapati')) return '🫓';
+  if (n.includes('puri')) return '🥯';
+  if (n.includes('idli') || n.includes('dosa')) return '🥞';
+  if (n.includes('upma') || n.includes('poha')) return '🍚';
+  if (n.includes('sabzi') || n.includes('sabji')) return '🥘';
+  if (n.includes('curry')) return '🍛';
+  if (n.includes('stir')) return '🥘';
+  if (n.includes('soup')) return '🍲';
+  if (n.includes('salad')) return '🥗';
+  if (n.includes('chutney')) return '🥣';
+  if (n.includes('raita')) return '🥛';
+  if (n.includes('halwa') || n.includes('kheer') || n.includes('sweet')) return '🍮';
+  if (n.includes('tea') || n.includes('chai')) return '🍵';
+  if (n.includes('lassi') || n.includes('shake')) return '🥤';
+  return '🍽️';
+}
+
+/* ============================================================
+   INGREDIENT MANAGEMENT
+   ============================================================ */
+const COMMON_INGREDIENTS = [
+  {name:'Potato',emoji:'🥔'},{name:'Tomato',emoji:'🍅'},{name:'Onion',emoji:'🧅'},
+  {name:'Carrot',emoji:'🥕'},{name:'Paneer',emoji:'🧀'},{name:'Capsicum',emoji:'🫑'},
+  {name:'Spinach',emoji:'🥬'},{name:'Cauliflower',emoji:'🥦'},{name:'Peas',emoji:'🫛'},
+  {name:'Corn',emoji:'🌽'},{name:'Garlic',emoji:'🧄'},{name:'Ginger',emoji:'🫚'},
+  {name:'Chilli',emoji:'🌶️'},{name:'Cabbage',emoji:'🥬'},{name:'Beans',emoji:'🫘'},
+  {name:'Mushroom',emoji:'🍄'},{name:'Broccoli',emoji:'🥦'},{name:'Cucumber',emoji:'🥒'},
+  {name:'Lemon',emoji:'🍋'},{name:'Rice',emoji:'🍚'},{name:'Egg',emoji:'🥚'},
+  {name:'Cheese',emoji:'🧀'},{name:'Butter',emoji:'🧈'},{name:'Milk',emoji:'🥛'}
+];
+function ingredientEmoji(canonical) {
+  const found = COMMON_INGREDIENTS.find(i => i.name.toLowerCase() === String(canonical).toLowerCase());
+  return found ? found.emoji : '🥗';
+}
+function addIngredient(raw, silent=false) {
+  const val = (raw || '').trim();
+  if (!val) { if (!silent) { showToast(t('enterIngredient'),'warning'); playError(); } return false; }
+  const canonical = normalizeIngredient(val);
+  if (state.ingredients.some(i => i.toLowerCase() === canonical.toLowerCase())) {
+    if (!silent) showToast(t('alreadyAdded'),'info');
+    return false;
+  }
+  state.ingredients.push(canonical);
+  renderChips();
+  renderSuggestions();
+  if (!silent) playClick();
+  return true;
+}
+function removeIngredient(idx) {
+  state.ingredients.splice(idx, 1);
+  renderChips();
+  renderSuggestions();
+  playClick();
+}
+function renderChips() {
+  const el = document.getElementById('chipsContainer');
+  if (!el) return;
+  if (state.ingredients.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = state.ingredients.map((ing, i) =>
+    `<span class="chip">
+      <span class="chip-emoji">${ingredientEmoji(ing)}</span>
+      ${esc(displayName(ing))}
+      <button type="button" class="chip-remove" data-idx="${i}"><i class="fas fa-xmark"></i></button>
+    </span>`
+  ).join('');
+  el.querySelectorAll('.chip-remove').forEach(b => {
+    b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); removeIngredient(parseInt(b.dataset.idx)); });
+  });
+}
+function renderSuggestions() {
+  const el = document.getElementById('suggestionsContainer');
+  if (!el) return;
+  const quick = ['Potato','Tomato','Onion','Carrot','Paneer','Capsicum','Spinach','Cauliflower','Peas','Corn'];
+  el.innerHTML = quick.map(q => {
+    const added = state.ingredients.some(i => i.toLowerCase() === q.toLowerCase());
+    return `<button type="button" class="suggestion-chip ${added ? 'added' : ''}" data-ing="${esc(q)}">
+      ${added ? '<i class="fas fa-check"></i>' : '<i class="fas fa-plus"></i>'} ${esc(displayName(q))}
+    </button>`;
+  }).join('');
+  el.querySelectorAll('.suggestion-chip').forEach(b => {
+    b.addEventListener('click', (e) => { e.preventDefault(); addIngredient(b.dataset.ing); });
+  });
+}
+
+/* ============================================================
+   RECIPE GENERATION
+   ============================================================ */
+async function generateRecipes(ingredients, goal='balanced', servings=4) {
+  if (!ingredients || ingredients.length === 0) {
+    showToast(t('addIngredient'),'warning'); playError(); return [];
+  }
+  if (state.isLoading) return [];
+  state.isLoading = true;
+  const btn = document.getElementById('generateBtn');
+  if (btn) btn.disabled = true;
+  playTune();
+  showLoading(true);
+  try {
+    await new Promise(r => setTimeout(r, 1400));
+    const recipes = buildLocalRecipes(ingredients, goal, servings);
+    if (!recipes || recipes.length < 3) throw new Error("Insufficient recipes");
+    state.history.unshift({
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+      ingredients: [...ingredients],
+      goal, servings, recipes
+    });
+    if (state.history.length > 20) state.history.pop();
+    saveHist();
+    if (firebaseReady && firebaseDB) {
+      try {
+        firebaseDB.ref('pakgharApp/stats').transaction(c => ({
+          totalGenerations: (c?.totalGenerations || 0) + 1,
+          totalRecipes: (c?.totalRecipes || 0) + recipes.length
+        }));
+      } catch(e){ console.warn(e); }
+    }
+    state.generatedRecipes = recipes;
+    state.currentRecipes = [...recipes];
+    state.activeFilter = 'All';
+    state.searchQuery = '';
+    state.sortBy = 'quickest';
+    showToast(`✨ ${recipes.length} ${t('generated')}`, 'success');
+    playDing();
+    return recipes;
+  } catch(err) {
+    console.error(err);
+    showToast(t('genFailed'),'error');
+    playError();
+    return [];
+  } finally {
+    state.isLoading = false;
+    if (btn) btn.disabled = false;
+    showLoading(false);
+  }
+}
+
+/* ============================================================
+   LOCAL RECIPE ENGINE — Real Ghar-Jaisa Khana
+   ============================================================ */
+function buildLocalRecipes(ingredients, goal, servings) {
+  const g = goal || 'balanced';
+  const serv = servings || 4;
+  const lang = state.language;
+  const dn = ingredients.map(i => displayName(i));
+  const list = dn.join(', ');
+  const first = dn[0] || (lang === 'hi' ? 'Sabzi' : 'Veggie');
+  const second = dn[1] || first;
+  const hasPaneer = ingredients.some(i => i.toLowerCase().includes('paneer'));
+  const hasPotato = ingredients.some(i => i.toLowerCase().includes('potato') || i.toLowerCase().includes('aloo'));
+  const hasPeas = ingredients.some(i => i.toLowerCase().includes('peas') || i.toLowerCase().includes('matar'));
+  const hasTomato = ingredients.some(i => i.toLowerCase().includes('tomato') || i.toLowerCase().includes('tamatar'));
+  const hasOnion = ingredients.some(i => i.toLowerCase().includes('onion') || i.toLowerCase().includes('pyaz'));
+  const hasCauliflower = ingredients.some(i => i.toLowerCase().includes('cauliflower') || i.toLowerCase().includes('gobhi'));
+
+  // Real ghar-jaisa dish names
+  const names = {
+    en: {
+      alooGobi: g === 'highprotein' ? `${first} Paneer Sabzi` : (hasPotato && hasCauliflower ? `Aloo Gobi Ghar Style` : `${first} ki Sabzi`),
+      dal: hasPeas ? `Matar Dal Tadka` : `Ghar ki Dal`,
+      khichdi: `Ghar ki Khichdi`,
+      paratha: hasPotato ? `Aloo Paratha` : (hasPaneer ? `Paneer Paratha` : `${first} Paratha`),
+      sabzi: `${first} ki Sukhi Sabzi`,
+      curry: hasPaneer ? `Paneer Butter Masala` : (hasTomato && hasOnion ? `Tamatar Pyaz Curry` : `${first} Curry Ghar Style`),
+      chole: `Punjabi Chole`,
+      pulao: `Ghar ka Veg Pulao`,
+      raita: `Boondi Raita`,
+      chutney: `Hare Dhaniya ki Chutney`
+    },
+    hi: {
+      alooGobi: g === 'highprotein' ? `${first} Paneer Sabzi` : (hasPotato && hasCauliflower ? `Aloo Gobi Ghar Style` : `${first} ki Sabzi`),
+      dal: hasPeas ? `Matar Dal Tadka` : `Ghar ki Dal`,
+      khichdi: `Ghar ki Khichdi`,
+      paratha: hasPotato ? `Aloo Paratha` : (hasPaneer ? `Paneer Paratha` : `${first} Paratha`),
+      sabzi: `${first} ki Sukhi Sabzi`,
+      curry: hasPaneer ? `Paneer Butter Masala` : (hasTomato && hasOnion ? `Tamatar Pyaz Curry` : `${first} Curry Ghar Style`),
+      chole: `Punjabi Chole`,
+      pulao: `Ghar ka Veg Pulao`,
+      raita: `Boondi Raita`,
+      chutney: `Hare Dhaniya ki Chutney`
+    }
+  }[lang];
+
+  const descs = {
+    en: {
+      alooGobi: `Ghar jaisi ${list} ki sabzi — dhaba style, made with simple spices for ${serv} people.`,
+      dal: `Comforting dal — the everyday ghar ka khana favourite. Perfect for ${serv} people.`,
+      khichdi: `Soft, comforting khichdi — light on stomach, easy to make, perfect for ${serv} people.`,
+      paratha: `Crispy, flaky parathas — the classic Indian breakfast. Serves ${serv} people.`,
+      sabzi: `Simple dry sabzi — a daily ghar ka khana classic for ${serv} people.`,
+      curry: `Rich, creamy curry — the star of every Indian dinner table. Serves ${serv} people.`,
+      chole: `Punjabi-style chole — spicy, tangy chickpeas for ${serv} people.`,
+      pulao: `Fragrant veg pulao — aromatic rice with vegetables. Serves ${serv} people.`,
+      raita: `Cool, refreshing yogurt raita — a perfect side for any meal.`,
+      chutney: `Fresh coriander chutney — the green zing on every plate.`
+    },
+    hi: {
+      alooGobi: `Ghar jaisi ${list} ki sabzi — dhaba style, ${serv} logon ke liye.`,
+      dal: `Comforting dal — har ghar ki favourite. ${serv} logon ke liye perfect.`,
+      khichdi: `Soft, comforting khichdi — pet ke liye aasan, ${serv} logon ke liye.`,
+      paratha: `Crispy, flaky parathas — classic Indian breakfast. ${serv} logon ke liye.`,
+      sabzi: `Simple sukhi sabzi — roz ka ghar ka khana, ${serv} logon ke liye.`,
+      curry: `Rich, creamy curry — har dinner table ka star. ${serv} logon ke liye.`,
+      chole: `Punjabi-style chole — spicy, tangy chane, ${serv} logon ke liye.`,
+      pulao: `Fragrant veg pulao — khushbudar chawal, ${serv} logon ke liye.`,
+      raita: `Cool, refreshing dahi raita — har khane ke saath perfect.`,
+      chutney: `Fresh dhaniya chutney — har plate pe hari mirch.`
+    }
+  }[lang];
+
+  // Scale ingredients by servings (base = 2 people, scale factor = serv/2)
+  const scale = serv / 2;
+  const scaleQty = (baseQty, unit) => {
+    const scaled = baseQty * scale;
+    const rounded = scaled % 1 === 0 ? scaled : scaled.toFixed(1);
+    return `${rounded} ${unit}`;
+  };
+
+  const templates = [
+    {
+      name: names.alooGobi, description: descs.alooGobi,
+      cuisine:'Indian', mealType:'Lunch', difficulty:'Easy',
+      servings: serv, prepTime:'15 mins', cookTime:'20 mins', totalTime:'35 mins',
+      ingredients: [
+        ...ingredients.map(i => `${scaleQty(1, 'cup')} ${displayName(i)}, chopped`),
+        `${scaleQty(2, 'tbsp')} oil`,
+        `${scaleQty(1, 'tsp')} jeera (cumin seeds)`,
+        `${scaleQty(1, 'tsp')} haldi (turmeric)`,
+        `${scaleQty(1, 'tsp')} dhaniya powder`,
+        `${scaleQty(1, 'tsp')} lal mirch`,
+        `${scaleQty(1, 'tsp')} garam masala`,
+        `${scaleQty(1, 'tsp')} salt (or to taste)`,
+        `${scaleQty(2, 'tbsp')} hara dhaniya, chopped`
+      ],
+      instructions: [
+        `Sabzi ko dho kar chhote tukdon mein kaat lein. Pyaz ko barik kaat lein.`,
+        `Kadhai mein ${scaleQty(2, 'tbsp')} tel garam karein. Jeera dalein aur chatakne dein.`,
+        hasOnion ? `Pyaz dalein aur golden brown hone tak bhunein (4-5 min).` : `Adrak-lehsun paste dalein aur 30 second bhunein.`,
+        `Tamatar dalein (agar hai) aur 2 min tak pakayein jab tak tel alag na ho jaye.`,
+        `${dn.join(', ')} dalein aur 4-5 min tak bhunein.`,
+        `Haldi, dhaniya powder, lal mirch, garam masala aur namak dalein. Achhe se milayein.`,
+        `1/4 cup paani dalein, dhak kar 8-10 min tak dhimi aanch par pakayein.`,
+        `Hara dhaniya se sajayein aur garma-garam roti ke saath serve karein.`
+      ],
+      tips: [
+        'Sabzi ko zyada na pakayein — thodi crunchy honi chahiye.',
+        'Aakhir mein nimbu ka ras dalein — swaad badh jayega.',
+        'Restaurant style ke liye 1 tsp ghee dalein.',
+        `Yeh recipe ${serv} logon ke liye perfect hai.`
+      ]
+    },
+    {
+      name: names.dal, description: descs.dal,
+      cuisine:'Indian', mealType:'Dinner', difficulty:'Easy',
+      servings: serv, prepTime:'10 mins', cookTime:'25 mins', totalTime:'35 mins',
+      ingredients: [
+        `${scaleQty(1, 'cup')} toor dal (arhar dal)`,
+        ...(hasPeas ? [`${scaleQty(0.5, 'cup')} matar (peas)`] : []),
+        `${scaleQty(1, 'medium')} pyaz, chopped`,
+        `${scaleQty(2, 'medium')} tamatar, chopped`,
+        `${scaleQty(1, 'tsp')} haldi`,
+        `${scaleQty(1, 'tsp')} jeera`,
+        `${scaleQty(3, 'cloves')} lehsun, chopped`,
+        `${scaleQty(2, 'tbsp')} ghee/oil`,
+        `${scaleQty(1, 'tsp')} garam masala`,
+        `${scaleQty(1, 'tsp')} lal mirch`,
+        `Namak swaad anusaar`,
+        `Hara dhaniya`
+      ],
+      instructions: [
+        `Dal ko dho kar 3 cup paani, haldi aur namak ke saath pressure cooker mein 4-5 seeti tak pakayein.`,
+        `Ek kadhai mein ghee garam karein. Jeera aur lehsun dalein — chatakne dein.`,
+        `Pyaz dalein aur golden bhunein.`,
+        `Tamatar, lal mirch aur garam masala dalein. 3-4 min tak pakayein jab tak tel alag na ho.`,
+        hasPeas ? `Matar dalein aur 3 min tak pakayein.` : `2 tbsp paani dalein aur mix karein.`,
+        `Pakayi hui dal dalein aur achhe se milayein.`,
+        `5 min tak ubaal aane dein. Consistency adjust karein.`,
+        `Hara dhaniya se sajayein aur chawal ya roti ke saath serve karein.`
+      ],
+      tips: [
+        'Dal ko achhe se pakayein — soft honi chahiye.',
+        'Tadka aakhir mein dalein — flavour zyada aayega.',
+        'Agar dal patli lage toh 5 min aur pakayein.',
+        `Perfect for ${serv} logon ke liye.`
+      ]
+    },
+    {
+      name: names.khichdi, description: descs.khichdi,
+      cuisine:'Indian', mealType:'Dinner', difficulty:'Easy',
+      servings: serv, prepTime:'10 mins', cookTime:'20 mins', totalTime:'30 mins',
+      ingredients: [
+        `${scaleQty(1, 'cup')} chawal (rice)`,
+        `${scaleQty(0.5, 'cup')} moong dal`,
+        ...ingredients.slice(0, 3).map(i => `${scaleQty(0.5, 'cup')} ${displayName(i)}, chopped`),
+        `${scaleQty(1, 'tsp')} jeera`,
+        `${scaleQty(1, 'tsp')} haldi`,
+        `${scaleQty(2, 'tbsp')} ghee`,
+        `${scaleQty(1, 'inch')} adrak, grated`,
+        `Namak swaad anusaar`,
+        `${scaleQty(4, 'cups')} paani`
+      ],
+      instructions: [
+        `Chawal aur dal ko dho kar 15 min bhigo dein.`,
+        `Cooker mein ghee garam karein. Jeera aur adrak dalein.`,
+        `Sabziyan dalein aur 2-3 min bhunein.`,
+        `Chawal, dal, haldi aur namak dalein.`,
+        `${scaleQty(4, 'cups')} paani dalein aur milayein.`,
+        `Cooker band karein aur 3-4 seeti tak pakayein.`,
+        `Steam nikalne dein, khichdi ko halka mix karein.`,
+        `Ghee dalein aur dahi ya papad ke saath serve karein.`
+      ],
+      tips: [
+        'Pet ke liye aasan — bimaar waqt mein best.',
+        'Sabziyan apne pasand ki dalein.',
+        'Sookhi khichdi ke liye 1 cup kam paani dalein.',
+        `Perfect for ${serv} logon ke liye.`
+      ]
+    },
+    {
+      name: names.paratha, description: descs.paratha,
+      cuisine:'Indian', mealType:'Breakfast', difficulty:'Medium',
+      servings: serv, prepTime:'20 mins', cookTime:'15 mins', totalTime:'35 mins',
+      ingredients: [
+        `${scaleQty(2, 'cups')} atta (wheat flour)`,
+        ...(hasPotato ? [`${scaleQty(2, 'medium')} aloo, boiled & mashed`] : []),
+        ...(hasPaneer ? [`${scaleQty(1, 'cup')} paneer, grated`] : []),
+        ...(!hasPotato && !hasPaneer ? ingredients.slice(0, 2).map(i => `${scaleQty(1, 'cup')} ${displayName(i)}, grated`) : []),
+        `${scaleQty(1, 'tsp')} jeera`,
+        `${scaleQty(1, 'tsp')} lal mirch`,
+        `${scaleQty(0.5, 'tsp')} haldi`,
+        `${scaleQty(2, 'tbsp')} hara dhaniya, chopped`,
+        `Namak swaad anusaar`,
+        `${scaleQty(4, 'tbsp')} ghee (for cooking)`
+      ],
+      instructions: [
+        `Atta mein paani, namak aur 1 tbsp ghee dalein. Soft dough banayein. 20 min rest dein.`,
+        `Filling ke liye sabzi/paneer mein jeera, lal mirch, haldi, dhaniya aur namak milayein.`,
+        `Dough ko chhote balls mein baantein. Har ball ko bel kar 3-inch circle banayein.`,
+        `Beech mein 2 tbsp filling rakhein. Edges ko utha kar band karein.`,
+        `Halke haath se bel kar 6-inch paratha banayein.`,
+        `Tawa garam karein. Paratha dalein aur dono taraf ghee laga kar golden-brown sekein.`,
+        `Garma-garam paratha dahi, achar ya makhan ke saath serve karein.`
+      ],
+      tips: [
+        'Filling mein paani nahi hona chahiye.',
+        'Dough ko zyada na belayen warna phatega.',
+        'Medium aanch par sekein — high flame pe jal jayega.',
+        `Perfect for ${serv} logon ke liye.`
+      ]
+    },
+    {
+      name: names.curry, description: descs.curry,
+      cuisine:'Indian', mealType:'Dinner', difficulty:'Medium',
+      servings: serv, prepTime:'15 mins', cookTime:'25 mins', totalTime:'40 mins',
+      ingredients: [
+        ...ingredients.map(i => `${scaleQty(1, 'cup')} ${displayName(i)}, cubed`),
+        `${scaleQty(3, 'medium')} pyaz, chopped`,
+        `${scaleQty(3, 'medium')} tamatar, pureed`,
+        `${scaleQty(0.5, 'cup')} dahi ya coconut milk`,
+        `${scaleQty(1, 'tbsp')} adrak-lehsun paste`,
+        `${scaleQty(1, 'tsp')} haldi`,
+        `${scaleQty(1, 'tsp')} garam masala`,
+        `${scaleQty(1, 'tsp')} lal mirch`,
+        `${scaleQty(2, 'tbsp')} oil`,
+        `Namak swaad anusaar`
+      ],
+      instructions: [
+        `Kadhai mein oil garam karein. Pyaz dalein aur golden brown bhunein (7-8 min).`,
+        `Adrak-lehsun paste dalein aur 1 min bhunein.`,
+        `Tamatar puree, haldi, lal mirch aur namak dalein. 5 min tak pakayein jab tak tel alag na ho.`,
+        `${dn.join(', ')} dalein aur 4-5 min bhunein.`,
+        `1 cup paani dalein aur dhak kar 12-15 min tak dhimi aanch par pakayein.`,
+        `Dahi ya coconut milk dalein aur 5 min aur pakayein.`,
+        `Garam masala dalein aur milayein.`,
+        `Hara dhaniya se sajayein aur naan ya chawal ke saath serve karein.`
+      ],
+      tips: [
+        'Gravy ko achhe se bhunein — restaurant style ke liye.',
+        'Kaju paste dalein creamy ke liye.',
+        'Aakhir mein kasuri methi dalein — khushbu badh jayegi.',
+        `Perfect for ${serv} logon ke liye.`
+      ]
+    }
+  ];
+
+  return templates.map((tpl, i) => {
+    const baseCal = 220 + (i * 40);
+    const basePro = 8 + (i % 3) * 4;
+    const baseCarb = 30 + (i * 5);
+    const baseFat = 8 + (i % 2) * 3;
+    // Scale nutrition by servings (base 4 people per recipe metric)
+    const scaleN = serv / 4;
+    return {
+      id: 'ghar_' + Date.now() + '_' + i + '_' + Math.random().toString(36).slice(2, 6),
+      name: tpl.name,
+      description: tpl.description,
+      cuisine: tpl.cuisine,
+      mealType: tpl.mealType,
+      difficulty: tpl.difficulty,
+      servings: serv,
+      prepTime: tpl.prepTime,
+      cookTime: tpl.cookTime,
+      totalTime: tpl.totalTime,
+      ingredients: tpl.ingredients,
+      instructions: tpl.instructions,
+      tips: tpl.tips,
+      nutrition: {
+        calories: `${Math.round(baseCal * scaleN)} kcal`,
+        protein: `${Math.round(basePro * scaleN)}g`,
+        carbs: `${Math.round(baseCarb * scaleN)}g`,
+        fat: `${Math.round(baseFat * scaleN)}g`
+      },
+      goal: g,
+      servingsCount: serv
+    };
+  });
+}
+
+/* ============================================================
+   WHATSAPP SHARE
+   ============================================================ */
+function buildRecipeText(recipe) {
+  const L = state.language === 'hi' ? {
+    title: '🍲 *PakGhar Recipe* 🍲',
+    name: '📖 Naam',
+    desc: '📝 Description',
+    servings: '👥 Kitne logon ka',
+    time: '⏱️ Time',
+    prep: 'Prep', cook: 'Cook', total: 'Total',
+    difficulty: '🎯 Difficulty',
+    cuisine: '🌏 Cuisine',
+    ingredients: '🥕 *Ingredients*',
+    instructions: '👨‍🍳 *Banane ka tarika*',
+    tips: '💡 *Tips*',
+    nutrition: '📊 *Nutrition (per person)*',
+    cal: 'Calories', pro: 'Protein', carb: 'Carbs', fat: 'Fat',
+    enjoy: '🙏 *PakGhar se bana ke khaayein — Aayan Likhar*'
+  } : {
+    title: '🍲 *PakGhar Recipe* 🍲',
+    name: '📖 Name',
+    desc: '📝 Description',
+    servings: '👥 Serves',
+    time: '⏱️ Time',
+    prep: 'Prep', cook: 'Cook', total: 'Total',
+    difficulty: '🎯 Difficulty',
+    cuisine: '🌏 Cuisine',
+    ingredients: '🥕 *Ingredients*',
+    instructions: '👨‍🍳 *Instructions*',
+    tips: '💡 *Tips*',
+    nutrition: '📊 *Nutrition (per person)*',
+    cal: 'Calories', pro: 'Protein', carb: 'Carbs', fat: 'Fat',
+    enjoy: '🙏 *Made with PakGhar — by Aayan Likhar*'
+  };
+
+  let text = `${L.title}\n\n`;
+  text += `${L.name}: *${recipe.name}*\n\n`;
+  text += `${L.desc}: ${recipe.description}\n\n`;
+  text += `${L.servings}: ${recipe.servings} ${recipe.servings === 1 ? 'person' : 'people'}\n`;
+  text += `${L.time}: Prep ${recipe.prepTime} | Cook ${recipe.cookTime} | Total ${recipe.totalTime}\n`;
+  text += `${L.difficulty}: ${recipe.difficulty}\n`;
+  text += `${L.cuisine}: ${recipe.cuisine}\n\n`;
+  text += `${L.ingredients}\n`;
+  recipe.ingredients.forEach(ing => { text += `• ${ing}\n`; });
+  text += `\n${L.instructions}\n`;
+  recipe.instructions.forEach((step, i) => { text += `${i + 1}. ${step}\n`; });
+  if (recipe.tips && recipe.tips.length > 0) {
+    text += `\n${L.tips}\n`;
+    recipe.tips.forEach(tip => { text += `• ${tip}\n`; });
+  }
+  text += `\n${L.nutrition}\n`;
+  text += `• ${L.cal}: ${recipe.nutrition.calories}\n`;
+  text += `• ${L.pro}: ${recipe.nutrition.protein}\n`;
+  text += `• ${L.carb}: ${recipe.nutrition.carbs}\n`;
+  text += `• ${L.fat}: ${recipe.nutrition.fat}\n\n`;
+  text += L.enjoy;
+  return text;
+}
+
+function shareRecipeWhatsApp(recipe) {
+  const text = buildRecipeText(recipe);
+  const encoded = encodeURIComponent(text);
+  const url = `https://wa.me/?text=${encoded}`;
+  window.open(url, '_blank');
+  playDing();
+  showToast(state.language === 'hi' ? 'WhatsApp khul raha hai...' : 'Opening WhatsApp...', 'success', 2000);
+}
+
+/* ============================================================
+   RENDER HOME
+   ============================================================ */
+function renderHome() {
+  const main = document.getElementById('mainContent');
+  if (state.showRecipes && state.generatedRecipes.length > 0) {
+    renderRecipeListSection();
+    return;
+  }
+  main.innerHTML = `
+    <section class="glass-card hero">
+      <div class="hero-eyebrow"><i class="fas fa-sparkles"></i> Ghar Jaisa Khana</div>
+      <h1 class="hero-title">${t('heroTitle')} <span class="accent-text">${t('heroTitleAccent')}</span></h1>
+      <p class="hero-sub">${t('heroSub')}</p>
+      <div class="input-wrap">
+        <i class="fas fa-carrot input-icon"></i>
+        <input type="text" class="input-field" id="ingredientInput" placeholder="${t('inputPlaceholder')}" autocomplete="off">
+        <button type="button" class="input-add-btn" id="addIngredientBtn"><i class="fas fa-plus"></i></button>
+        <div class="autocomplete-box" id="autocompleteBox"></div>
+      </div>
+      <div class="chips-container" id="chipsContainer"></div>
+      <div class="section-label"><i class="fas fa-bolt"></i> ${t('quickAdd')}</div>
+      <div class="suggestions" id="suggestionsContainer"></div>
+      <div class="section-label"><i class="fas fa-users"></i> ${t('howManyPeople')}</div>
+      <div class="servings-selector" id="servingsSelector">
+        ${[1,2,3,4,5,6,8].map(n => `
+          <button type="button" class="serving-btn ${state.servings === n ? 'active' : ''}" data-servings="${n}">
+            <span class="serving-num">${n}</span>
+            <span class="serving-label">${n === 1 ? t('person') : t('people')}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="section-label"><i class="fas fa-bullseye"></i> ${t('cookingGoal')}</div>
+      <div class="goal-selector" id="goalSelector">
+        <button type="button" class="goal-chip ${state.activeGoal === 'balanced' ? 'active' : ''}" data-goal="balanced"><i class="fas fa-scale-balanced"></i> ${t('balanced')}</button>
+        <button type="button" class="goal-chip ${state.activeGoal === 'highprotein' ? 'active' : ''}" data-goal="highprotein"><i class="fas fa-dumbbell"></i> ${t('highProtein')}</button>
+        <button type="button" class="goal-chip ${state.activeGoal === 'lowcarb' ? 'active' : ''}" data-goal="lowcarb"><i class="fas fa-leaf"></i> ${t('lowCarb')}</button>
+        <button type="button" class="goal-chip ${state.activeGoal === 'weightloss' ? 'active' : ''}" data-goal="weightloss"><i class="fas fa-fire"></i> ${t('weightLoss')}</button>
+      </div>
+      <button type="button" class="btn-primary" id="generateBtn">
+        <i class="fas fa-wand-magic-sparkles"></i> ${t('generateBtn')}
+      </button>
+    </section>
+    <h2 class="section-title"><i class="fas fa-fire-flame-curved"></i> ${t('popularIdeas')}</h2>
+    <div class="category-scroll" id="categoryScroll">
+      ${[
+        {emoji:'🍛',name:'Dal',key:'Quick Meals'},
+        {emoji:'🥘',name:'Sabzi',key:'Indian'},
+        {emoji:'🫓',name:'Paratha',key:'Breakfast'},
+        {emoji:'🍚',name:'Pulao',key:'Dinner'},
+        {emoji:'🥗',name:'Salad',key:'Healthy'},
+        {emoji:'🍮',name:'Mithai',key:'High Protein'}
+      ].map(c => `<button type="button" class="category-card" data-cat="${c.key}"><span class="cat-emoji">${c.emoji}</span>${c.name}</button>`).join('')}
+    </div>
+  `;
+
+  const input = document.getElementById('ingredientInput');
+  const addBtn = document.getElementById('addIngredientBtn');
+  const acBox = document.getElementById('autocompleteBox');
+
+  function handleAdd() {
+    if (addIngredient(input.value)) { input.value = ''; input.focus(); hideAC(); }
+  }
+  addBtn.addEventListener('click', (e) => { e.preventDefault(); handleAdd(); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } });
+
+  function showAC() {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { hideAC(); return; }
+    const matches = [];
+    COMMON_INGREDIENTS.forEach(i => {
+      const canonical = i.name.toLowerCase();
+      if (state.ingredients.some(s => s.toLowerCase() === canonical)) return;
+      const hindiName = EN_TO_HI[canonical] || '';
+      if (canonical.includes(q) || hindiName.toLowerCase().includes(q)) {
+        matches.push({...i, hindiName});
+      }
+    });
+    if (matches.length === 0) { hideAC(); return; }
+    acBox.innerHTML = matches.slice(0, 6).map(m =>
+      `<div class="ac-item" data-ing="${esc(m.name)}">
+        <span class="ac-emoji">${m.emoji}</span>
+        <span>${esc(displayName(m.name))}</span>
+        ${m.hindiName && state.language === 'en' ? `<span class="ac-alias">${esc(m.hindiName)}</span>` : ''}
+        <span class="ac-add"><i class="fas fa-plus"></i></span>
+      </div>`
+    ).join('');
+    acBox.classList.add('show');
+    acBox.querySelectorAll('.ac-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        addIngredient(item.dataset.ing);
+        input.value = '';
+        hideAC();
+        input.focus();
+      });
+    });
+  }
+  function hideAC() { acBox.classList.remove('show'); }
+  input.addEventListener('input', debounce(showAC, 120));
+  input.addEventListener('focus', showAC);
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.input-wrap')) hideAC();
+  });
+
+  document.querySelectorAll('.goal-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.goal-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.activeGoal = chip.dataset.goal;
+      playClick();
+      showToast(`${t('goalSet')}: ${chip.textContent.trim()}`, 'info', 1800);
+    });
+  });
+
+  document.querySelectorAll('.serving-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.serving-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.servings = parseInt(btn.dataset.servings);
+      saveServ();
+      playClick();
+      showToast(`${t('peopleSet')}: ${state.servings} ${state.servings === 1 ? t('person') : t('people')}`, 'success', 1800);
+    });
+  });
+
+  const catMap = {
+    'Quick Meals':['Onion','Tomato','Capsicum'],
+    'Indian':['Potato','Cauliflower','Peas'],
+    'Healthy':['Spinach','Carrot','Corn'],
+    'Dinner':['Paneer','Tomato','Onion'],
+    'Breakfast':['Potato','Onion','Tomato'],
+    'High Protein':['Paneer','Peas','Spinach']
+  };
+  document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      const ings = catMap[card.dataset.cat] || [];
+      ings.forEach(i => addIngredient(i, true));
+      playClick();
+      showToast(`Added ${ings.map(displayName).join(', ')}`, 'success', 2000);
+    });
+  });
+
+  const genBtn = document.getElementById('generateBtn');
+  genBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (state.ingredients.length === 0) {
+      showToast(t('addIngredient'),'warning'); playError(); input.focus(); return;
+    }
+    const recipes = await generateRecipes(state.ingredients, state.activeGoal, state.servings);
+    if (recipes.length > 0) {
+      state.showRecipes = true;
+      renderRecipeListSection();
+    }
+  });
+  attachRipple(genBtn);
+
+  renderChips();
+  renderSuggestions();
+}
+
+/* ============================================================
+   RECIPE LIST
+   ============================================================ */
+function renderRecipeListSection() {
+  const main = document.getElementById('mainContent');
+  if (state.generatedRecipes.length === 0) { state.showRecipes = false; renderHome(); return; }
+  main.innerHTML = `
+    <button type="button" class="back-btn" id="backFromRecipes"><i class="fas fa-arrow-left"></i> ${t('back')}</button>
+    <div class="stats-bar">
+      <div class="stat-card"><div class="stat-value">${state.generatedRecipes.length}</div><div class="stat-label">${t('recipesForYou')}</div></div>
+      <div class="stat-card"><div class="stat-value">${state.ingredients.length}</div><div class="stat-label">${t('ingredients')}</div></div>
+      <div class="stat-card"><div class="stat-value">${state.servings}</div><div class="stat-label">${state.servings === 1 ? t('person') : t('people')}</div></div>
+    </div>
+    <h2 class="section-title" style="margin-top:8px;"><i class="fas fa-bowl-food"></i> ${t('recipesForYou')}</h2>
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">
+      ${t('basedOn')}: <strong>${esc(state.ingredients.map(displayName).join(', '))}</strong> · ${state.servings} ${state.servings === 1 ? t('person') : t('people')}
+    </p>
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <i class="fas fa-magnifying-glass"></i>
+        <input type="text" class="search-input" id="searchRecipes" placeholder="${t('searchPlaceholder')}" value="${esc(state.searchQuery)}">
+      </div>
+      <select class="sort-select" id="sortRecipes">
+        <option value="quickest" ${state.sortBy === 'quickest' ? 'selected' : ''}>${t('quickest')}</option>
+        <option value="easiest" ${state.sortBy === 'easiest' ? 'selected' : ''}>${t('easiest')}</option>
+        <option value="mostIngredients" ${state.sortBy === 'mostIngredients' ? 'selected' : ''}>${t('mostIngredients')}</option>
+        <option value="highestProtein" ${state.sortBy === 'highestProtein' ? 'selected' : ''}>${t('highestProtein')}</option>
+      </select>
+    </div>
+    <div class="filter-chips" id="filterChips">
+      ${[
+        {id:'All',icon:'fa-layer-group',label:t('all')},
+        {id:'Indian',icon:'fa-pepper-hot',label:t('indian')},
+        {id:'Healthy',icon:'fa-leaf',label:t('healthy')},
+        {id:'Quick',icon:'fa-bolt',label:t('quick')},
+        {id:'Easy',icon:'fa-circle-check',label:t('easy')},
+        {id:'Vegetarian',icon:'fa-seedling',label:t('vegetarian')},
+        {id:'High Protein',icon:'fa-dumbbell',label:t('highProtein')}
+      ].map(f => `<button type="button" class="filter-chip ${state.activeFilter === f.id ? 'active' : ''}" data-filter="${f.id}"><i class="fas ${f.icon}"></i> ${f.label}</button>`).join('')}
+    </div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+  `;
+
+  document.getElementById('backFromRecipes').addEventListener('click', (e) => { e.preventDefault(); resetToHome(); });
+  document.getElementById('searchRecipes').addEventListener('input', debounce(e => {
+    state.searchQuery = e.target.value;
+    applyFiltersAndRender();
+  }, 250));
+  document.getElementById('sortRecipes').addEventListener('change', e => {
+    state.sortBy = e.target.value;
+    applyFiltersAndRender();
+  });
+  document.querySelectorAll('#filterChips .filter-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      state.activeFilter = chip.dataset.filter;
+      document.querySelectorAll('#filterChips .filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFiltersAndRender();
+    });
+  });
+  applyFiltersAndRender();
+}
+
+function applyFiltersAndRender() {
+  let recipes = [...state.generatedRecipes];
+  if (state.searchQuery.trim()) {
+    const q = state.searchQuery.toLowerCase();
+    recipes = recipes.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      r.description.toLowerCase().includes(q) ||
+      r.cuisine.toLowerCase().includes(q) ||
+      r.ingredients.join(' ').toLowerCase().includes(q)
+    );
+  }
+  if (state.activeFilter !== 'All') {
+    const f = state.activeFilter;
+    recipes = recipes.filter(r => {
+      if (f === 'Vegetarian') return true;
+      if (f === 'Quick') return parseInt(r.totalTime) <= 30;
+      if (f === 'Easy') return r.difficulty === 'Easy';
+      if (f === 'Healthy') return parseInt(r.nutrition.calories) <= 500;
+      if (f === 'High Protein') return parseInt(r.nutrition.protein) >= 12;
+      if (f === 'Indian') return r.cuisine.toLowerCase().includes('indian');
+      return r.cuisine.toLowerCase().includes(f.toLowerCase()) || r.mealType.toLowerCase().includes(f.toLowerCase());
+    });
+  }
+  if (state.sortBy === 'quickest') recipes.sort((a,b) => parseInt(a.totalTime) - parseInt(b.totalTime));
+  else if (state.sortBy === 'easiest') {
+    const ord = {'Easy':1,'Medium':2,'Hard':3};
+    recipes.sort((a,b) => (ord[a.difficulty]||2) - (ord[b.difficulty]||2));
+  } else if (state.sortBy === 'mostIngredients') recipes.sort((a,b) => b.ingredients.length - a.ingredients.length);
+  else if (state.sortBy === 'highestProtein') recipes.sort((a,b) => parseInt(b.nutrition.protein) - parseInt(a.nutrition.protein));
+  state.currentRecipes = recipes;
+  renderRecipeCards(recipes);
+}
+
+function renderRecipeCards(recipes) {
+  const grid = document.getElementById('recipeGrid');
+  if (!grid) return;
+  if (recipes.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">🔍</div><h3>${t('noRecipes')}</h3><p>${t('noRecipesSub')}</p></div>`;
+    return;
+  }
+  grid.innerHTML = recipes.map((r, i) => {
+    const isFav = state.favorites.some(f => f.id === r.id);
+    const emoji = foodEmoji(r.name);
+    const proteinNum = parseInt(r.nutrition.protein) || 0;
+    return `
+      <article class="recipe-card" style="animation-delay:${i * 0.06}s;" data-id="${esc(r.id)}">
+        <div class="recipe-emoji-hero">
+          <span class="emoji-big">${emoji}</span>
+          <div class="recipe-time-badge"><i class="fas fa-clock"></i> ${esc(r.totalTime)}</div>
+          <button type="button" class="recipe-fav-float ${isFav ? 'active' : ''}" data-fav-id="${esc(r.id)}">
+            <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
+          </button>
+        </div>
+        <div class="recipe-body">
+          <h3 class="recipe-name">${esc(r.name)}</h3>
+          <p class="recipe-desc">${esc(r.description)}</p>
+          <div class="recipe-meta">
+            <span class="badge"><i class="fas fa-signal"></i> ${esc(r.difficulty)}</span>
+            <span class="badge gray">${esc(r.cuisine)}</span>
+            <span class="badge servings"><i class="fas fa-users"></i> ${r.servings} ${r.servings === 1 ? t('person') : t('people')}</span>
+            ${proteinNum >= 15 ? `<span class="badge protein"><i class="fas fa-dumbbell"></i> ${proteinNum}g</span>` : ''}
+          </div>
+          <button type="button" class="btn-view" data-open-id="${esc(r.id)}">${t('viewRecipe')} <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  grid.querySelectorAll('.recipe-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.recipe-fav-float')) return;
+      openRecipeDetail(card.dataset.id);
+    });
+  });
+  grid.querySelectorAll('.recipe-fav-float').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      toggleFavorite(btn.dataset.favId);
+      const isNowFav = state.favorites.some(f => f.id === btn.dataset.favId);
+      btn.classList.toggle('active', isNowFav);
+      btn.innerHTML = `<i class="fa${isNowFav ? 's' : 'r'} fa-heart"></i>`;
+    });
+  });
+}
+
+/* ============================================================
+   DETAIL VIEW
+   ============================================================ */
+window.openRecipeDetail = function(id) {
+  const recipe = state.generatedRecipes.find(r => r.id === id)
+    || state.favorites.find(r => r.id === id)
+    || state.history.flatMap(h => h.recipes).find(r => r.id === id);
+  if (!recipe) { showToast(t('recipeNotFound'),'error'); return; }
+  state.viewingDetail = recipe;
+  history.pushState({view:'detail', id: recipe.id}, '');
+  renderDetailView(recipe);
+};
+
+function renderDetailView(recipe) {
+  const main = document.getElementById('mainContent');
+  const isFav = state.favorites.some(f => f.id === recipe.id);
+  const emoji = foodEmoji(recipe.name);
+  const proteinNum = parseInt(recipe.nutrition.protein) || 0;
+
+  main.innerHTML = `
+    <div class="detail-view">
+      <button type="button" class="back-btn" id="backFromDetail"><i class="fas fa-arrow-left"></i> ${t('back')}</button>
+      <div class="detail-hero-emoji">
+        <span class="emoji-huge">${emoji}</span>
+        <div class="detail-hero-overlay"></div>
+      </div>
+      <div class="flex-between" style="align-items:flex-start;">
+        <div style="flex:1;">
+          <h1 class="detail-name">${esc(recipe.name)}</h1>
+          <p class="detail-desc">${esc(recipe.description)}</p>
+        </div>
+        <button type="button" class="icon-btn ${isFav ? 'active' : ''}" id="detailFavBtn" style="width:48px;height:48px;font-size:1.2rem;flex-shrink:0;${isFav ? 'color:#c65d3b;border-color:#c65d3b;background:#fbe9df;' : ''}">
+          <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
+        </button>
+      </div>
+      <div class="detail-badges">
+        <span class="badge">🌿 ${t('vegetarian')}</span>
+        <span class="badge gray">${esc(recipe.cuisine)}</span>
+        <span class="badge gray">${esc(recipe.mealType)}</span>
+        <span class="badge servings"><i class="fas fa-users"></i> ${recipe.servings} ${recipe.servings === 1 ? t('person') : t('people')}</span>
+        ${proteinNum >= 15 ? `<span class="badge protein"><i class="fas fa-dumbbell"></i> ${proteinNum}g ${t('protein')}</span>` : ''}
+      </div>
+
+      <div class="detail-section">
+        <h3><i class="fas fa-carrot"></i> ${t('ingredients')}</h3>
+        <div>
+          ${recipe.ingredients.map(ing => `
+            <label class="ingredient-check" data-check>
+              <input type="checkbox">
+              <label>${esc(displayIngredientLine(ing))}</label>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3><i class="fas fa-hourglass-half"></i> ${t('preparation')}</h3>
+        <div class="time-grid">
+          <div class="time-item"><div class="time-value">${esc(recipe.prepTime)}</div><div class="time-label">${t('prep')}</div></div>
+          <div class="time-item"><div class="time-value">${esc(recipe.cookTime)}</div><div class="time-label">${t('cook')}</div></div>
+          <div class="time-item"><div class="time-value">${esc(recipe.totalTime)}</div><div class="time-label">${t('total')}</div></div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3><i class="fas fa-list-ol"></i> ${t('instructions')}</h3>
+        ${recipe.instructions.map((step, i) => `
+          <div class="instruction-step">
+            <div class="step-num">${String(i+1).padStart(2,'0')}</div>
+            <div class="step-text">${esc(displayIngredientLine(step))}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      ${recipe.tips && recipe.tips.length > 0 ? `
+      <div class="detail-section">
+        <h3><i class="fas fa-lightbulb"></i> ${t('cookingTips')}</h3>
+        <ul class="tips-list">${recipe.tips.map(tip => `<li>${esc(displayIngredientLine(tip))}</li>`).join('')}</ul>
+      </div>` : ''}
+
+      <div class="detail-section">
+        <h3><i class="fas fa-chart-pie"></i> ${t('nutrition')} <span style="font-size:0.72rem;color:var(--text-muted);font-weight:500;">${t('perServing')}</span></h3>
+        <div class="nutrition-grid">
+          <div class="nutri-card"><div class="nutri-value">${esc(recipe.nutrition.calories)}</div><div class="nutri-label">${t('calories')}</div></div>
+          <div class="nutri-card"><div class="nutri-value">${esc(recipe.nutrition.protein)}</div><div class="nutri-label">${t('protein')}</div></div>
+          <div class="nutri-card"><div class="nutri-value">${esc(recipe.nutrition.carbs)}</div><div class="nutri-label">${t('carbs')}</div></div>
+          <div class="nutri-card"><div class="nutri-value">${esc(recipe.nutrition.fat)}</div><div class="nutri-label">${t('fat')}</div></div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-share" id="shareWhatsAppBtn">
+        <i class="fab fa-whatsapp"></i> ${t('shareWhatsApp')}
+      </button>
+    </div>
+  `;
+
+  document.querySelectorAll('[data-check]').forEach(el => {
+    const cb = el.querySelector('input[type="checkbox"]');
+    cb.addEventListener('change', () => {
+      el.classList.toggle('checked', cb.checked);
+      if (cb.checked) playClick();
+    });
+  });
+
+  document.getElementById('backFromDetail').addEventListener('click', (e) => { e.preventDefault(); history.back(); });
+
+  document.getElementById('detailFavBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleFavorite(recipe.id);
+    const isNowFav = state.favorites.some(f => f.id === recipe.id);
+    this.classList.toggle('active', isNowFav);
+    this.innerHTML = `<i class="fa${isNowFav ? 's' : 'r'} fa-heart"></i>`;
+    this.style.color = isNowFav ? '#c65d3b' : '';
+    this.style.borderColor = isNowFav ? '#c65d3b' : '';
+    this.style.background = isNowFav ? '#fbe9df' : '';
+  });
+
+  document.getElementById('shareWhatsAppBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    shareRecipeWhatsApp(recipe);
+  });
+
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ============================================================
+   RESET TO HOME
+   ============================================================ */
+function resetToHome() {
+  state.showRecipes = false;
+  state.generatedRecipes = [];
+  state.currentRecipes = [];
+  state.viewingDetail = null;
+  state.ingredients = [];
+  state.searchQuery = '';
+  state.activeFilter = 'All';
+  state.currentTab = 'home';
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.tab === 'home');
+  });
+  renderHome();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ============================================================
+   FAVORITES
+   ============================================================ */
+window.toggleFavorite = function(id) {
+  const recipe = state.generatedRecipes.find(r => r.id === id)
+    || state.history.flatMap(h => h.recipes).find(r => r.id === id)
+    || state.favorites.find(r => r.id === id);
+  if (!recipe) return;
+  const idx = state.favorites.findIndex(f => f.id === id);
+  if (idx === -1) {
+    state.favorites.push(recipe);
+    showToast(t('savedFav'),'success',2000);
+    playDing();
+  } else {
+    state.favorites.splice(idx, 1);
+    showToast(t('removedFav'),'info',2000);
+    playClick();
+  }
+  saveFav();
+  updateFavDot();
+};
+function updateFavDot() {
+  const dot = document.getElementById('favDot');
+  if (dot) dot.style.display = state.favorites.length > 0 ? 'block' : 'none';
+  const btn = document.getElementById('favHeaderBtn');
+  if (btn) btn.classList.toggle('has-dot', state.favorites.length > 0);
+}
+function renderFavorites() {
+  const main = document.getElementById('mainContent');
+  updateFavDot();
+  if (state.favorites.length === 0) {
+    main.innerHTML = `
+      <h1 class="section-title" style="font-size:1.6rem;margin-top:8px;">${t('favorites')}</h1>
+      <p style="color:var(--text-muted);font-size:0.87rem;margin-bottom:20px;">${t('noFavsSub')}</p>
+      <div class="empty-state"><div class="empty-icon">💚</div><h3>${t('noFavs')}</h3><p>${t('noFavsSub')}</p></div>`;
+    return;
+  }
+  main.innerHTML = `
+    <h1 class="section-title" style="font-size:1.6rem;margin-top:8px;">${t('favorites')}</h1>
+    <p style="color:var(--text-muted);font-size:0.87rem;margin-bottom:20px;">${state.favorites.length} saved recipe${state.favorites.length > 1 ? 's' : ''}.</p>
+    <div class="recipe-grid" id="favGrid"></div>
+  `;
+  const grid = document.getElementById('favGrid');
+  grid.innerHTML = state.favorites.map((r, i) => {
+    const emoji = foodEmoji(r.name);
+    return `
+      <article class="recipe-card" style="animation-delay:${i * 0.06}s;" data-id="${esc(r.id)}">
+        <div class="recipe-emoji-hero">
+          <span class="emoji-big">${emoji}</span>
+          <div class="recipe-time-badge"><i class="fas fa-clock"></i> ${esc(r.totalTime)}</div>
+          <button type="button" class="recipe-fav-float active" data-fav-id="${esc(r.id)}"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="recipe-body">
+          <h3 class="recipe-name">${esc(r.name)}</h3>
+          <p class="recipe-desc">${esc(r.description)}</p>
+          <div class="recipe-meta">
+            <span class="badge"><i class="fas fa-signal"></i> ${esc(r.difficulty)}</span>
+            <span class="badge gray">${esc(r.cuisine)}</span>
+            <span class="badge servings"><i class="fas fa-users"></i> ${r.servings}</span>
+          </div>
+          <button type="button" class="btn-view" data-open-id="${esc(r.id)}">${t('viewRecipe')} <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  grid.querySelectorAll('.recipe-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.recipe-fav-float')) return;
+      openRecipeDetail(card.dataset.id);
+    });
+  });
+  grid.querySelectorAll('.recipe-fav-float').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      toggleFavorite(btn.dataset.favId);
+      renderFavorites();
+    });
+  });
+}
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+function renderHistory() {
+  const main = document.getElementById('mainContent');
+  if (state.history.length === 0) {
+    main.innerHTML = `
+      <h1 class="section-title" style="font-size:1.6rem;margin-top:8px;">${t('recentRecipes')}</h1>
+      <p style="color:var(--text-muted);font-size:0.87rem;margin-bottom:20px;">${t('noHistorySub')}</p>
+      <div class="empty-state"><div class="empty-icon">🕐</div><h3>${t('noHistory')}</h3><p>${t('noHistorySub')}</p></div>`;
+    return;
+  }
+  main.innerHTML = `
+    <h1 class="section-title" style="font-size:1.6rem;margin-top:8px;">${t('recentRecipes')}</h1>
+    <p style="color:var(--text-muted);font-size:0.87rem;margin-bottom:20px;">${t('tapHistory')}</p>
+    ${state.history.map((h, i) => `
+      <div class="detail-section" style="cursor:pointer;" data-hist-idx="${i}">
+        <div class="flex-between">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-display);">
+              ${esc(h.ingredients.map(displayName).join(', '))}
+            </div>
+            <div style="font-size:0.72rem;color:var(--text-muted);display:flex;gap:10px;flex-wrap:wrap;">
+              <span><i class="far fa-clock"></i> ${new Date(h.timestamp).toLocaleString()}</span>
+              <span><i class="fas fa-bowl-food"></i> ${h.recipes.length} recipes</span>
+              ${h.servings ? `<span><i class="fas fa-users"></i> ${h.servings} people</span>` : ''}
+            </div>
+          </div>
+          <i class="fas fa-chevron-right" style="color:var(--text-muted);flex-shrink:0;"></i>
+        </div>
+      </div>
+    `).join('')}
+  `;
+  main.querySelectorAll('[data-hist-idx]').forEach(el => {
+    el.addEventListener('click', () => loadHistory(parseInt(el.dataset.histIdx)));
+  });
+}
+window.loadHistory = function(idx) {
+  const entry = state.history[idx];
+  if (!entry) return;
+  state.generatedRecipes = entry.recipes;
+  state.ingredients = entry.ingredients;
+  state.activeGoal = entry.goal || 'balanced';
+  if (entry.servings) state.servings = entry.servings;
+  state.showRecipes = true;
+  state.currentTab = 'home';
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.tab === 'home');
+  });
+  renderRecipeListSection();
+  playClick();
+  showToast(t('recipesLoaded'),'info');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+};
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+function renderAbout() {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `
+    <div style="text-align:center;padding:24px 0;">
+      <div style="font-size:4rem;line-height:1;margin-bottom:10px;">🍲</div>
+      <h1 style="font-size:2rem;font-weight:700;letter-spacing:-0.7px;font-family:var(--font-display);">PakGhar</h1>
+      <p style="color:var(--text-secondary);margin-top:6px;font-size:0.92rem;max-width:340px;margin-left:auto;margin-right:auto;">
+        ${t('heroSub')}
+      </p>
+    </div>
+    <div class="detail-section">
+      <h3><i class="fas fa-star"></i> ${t('features')}</h3>
+      <ul style="list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        ${[
+          {icon:'fa-house',text:'Real Ghar ka Khana'},
+          {icon:'fa-users',text:'Kitne Logon ka'},
+          {icon:'fa-wand-magic-sparkles',text:'AI Recipe Generator'},
+          {icon:'fa-heart',text:'Favorites'},
+          {icon:'fa-clock-rotate-left',text:'Recipe History'},
+          {icon:'fa-dumbbell',text:'Goal-Based Cooking'},
+          {icon:'fa-whatsapp',text:'WhatsApp Share'},
+          {icon:'fa-magnifying-glass',text:'Smart Search'},
+          {icon:'fa-language',text:'Hinglish / English'},
+          {icon:'fa-music',text:'Inbuilt Cooking Tunes'},
+          {icon:'fa-mobile-screen',text:'Mobile Friendly'},
+          {icon:'fa-shield-halved',text:'Privacy First'}
+        ].map(f => `<li style="font-size:0.84rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;">
+          <i class="fas ${f.icon}" style="color:var(--accent);font-size:0.9rem;width:16px;"></i> ${f.text}
+        </li>`).join('')}
+      </ul>
+    </div>
+    <div class="detail-section">
+      <h3><i class="fas fa-circle-info"></i> App Ke Baare Mein</h3>
+      <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.7;">
+        <strong>PakGhar</strong> aapko deta hai <strong>real ghar jaisa khana</strong> — Dal, Sabzi, Paratha, Khichdi, Pulao jaise traditional Indian recipes, AI se banaye hue. Bas apne ingredients add karein, batayein kitne logon ka khana hai, aur instant recipes paiye.
+      </p>
+      <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.7;margin-top:12px;">
+        Har recipe ke saath <strong>WhatsApp Share</strong> button hai — poora recipe apne family aur friends ko bhejein ek tap mein. Hinglish aur English dono support hai.
+      </p>
+    </div>
+    <div class="detail-section">
+      <h3><i class="fas fa-code"></i> ${t('developer')}</h3>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:800;flex-shrink:0;box-shadow:var(--shadow-warm);">AL</div>
+        <div>
+          <div style="font-weight:800;font-size:1.1rem;color:var(--text-primary);">Aayan Likhar</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Full-Stack Developer & AI Enthusiast</div>
+        </div>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <i class="fas fa-triangle-exclamation"></i>
+      <div class="disclaimer-content">
+        <h4>${t('disclaimerTitle')}</h4>
+        <p>${t('disclaimerText')}</p>
+      </div>
+    </div>
+    <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.78rem;">
+      ${t('version')} 1.0 • © ${new Date().getFullYear()} PakGhar by Aayan Likhar
+    </div>
+  `;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.tab === tab);
+  });
+  if (tab === 'home') resetToHome();
+  else if (tab === 'favorites') renderFavorites();
+  else if (tab === 'history') renderHistory();
+  else if (tab === 'about') renderAbout();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function updateNavLabels() {
+  const lbls = { en:{home:'Home',favorites:'Favorites',history:'History',about:'About'},
+                 hi:{home:'Home',favorites:'Favorites',history:'History',about:'About'} };
+  const l = lbls[state.language] || lbls.en;
+  const h = document.getElementById('navHomeLabel');
+  const f = document.getElementById('navFavLabel');
+  const hi = document.getElementById('navHistLabel');
+  const a = document.getElementById('navAboutLabel');
+  if (h) h.textContent = l.home;
+  if (f) f.textContent = l.favorites;
+  if (hi) hi.textContent = l.history;
+  if (a) a.textContent = l.about;
+}
+
+function updateGreeting() {
+  const el = document.getElementById('headerGreeting');
+  if (!el) return;
+  const hour = new Date().getHours();
+  let greeting;
+  if (state.language === 'hi') {
+    if (hour < 12) greeting = 'Suprabhat';
+    else if (hour < 17) greeting = 'Namaste';
+    else greeting = 'Shubh Sandhya';
+  } else {
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 17) greeting = 'Good afternoon';
+    else greeting = 'Good evening';
+  }
+  el.textContent = greeting;
+}
+
+/* ============================================================
+   KEYBOARD DETECTION
+   ============================================================ */
+function initKeyboardDetection() {
+  let initialHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  let keyboardOpen = false;
+  function setKeyboard(open) {
+    if (keyboardOpen === open) return;
+    keyboardOpen = open;
+    if (open) {
+      document.body.classList.add('keyboard-open');
+    } else {
+      document.body.classList.remove('keyboard-open');
+    }
+  }
+  function checkViewport() {
+    if (!window.visualViewport) return;
+    const vv = window.visualViewport;
+    const heightDiff = initialHeight - vv.height;
+    const isOpen = heightDiff > 150;
+    setKeyboard(isOpen);
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', checkViewport);
+    window.visualViewport.addEventListener('scroll', checkViewport);
+  }
+  document.addEventListener('focusin', (e) => {
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') setKeyboard(true);
+  });
+  document.addEventListener('focusout', () => {
+    setTimeout(() => {
+      const active = document.activeElement;
+      const tag = active ? active.tagName : '';
+      if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') setKeyboard(false);
+    }, 100);
+  });
+  window.addEventListener('resize', () => {
+    initialHeight = Math.max(initialHeight, window.innerHeight);
+    checkViewport();
+  });
+}
+
+/* ============================================================
+   LANGUAGE SWITCH
+   ============================================================ */
+function switchLanguage(newLang) {
+  if (state.switchingLang) return;
+  state.switchingLang = true;
+  const overlay = document.getElementById('langSwitchOverlay');
+  const icon = document.getElementById('langSwitchIcon');
+  const text = document.getElementById('langSwitchText');
+  const sub = document.getElementById('langSwitchSub');
+  const isEn = newLang === 'en';
+  icon.textContent = isEn ? '🇬🇧' : '🇮🇳';
+  const newT = T[newLang];
+  text.innerHTML = `${newT.switchingTo} <span>${isEn ? 'English' : 'Hinglish'}</span>`;
+  sub.textContent = newT.switchingSub;
+  icon.style.animation = 'none';
+  void icon.offsetWidth;
+  icon.style.animation = 'langIconSpin 1s cubic-bezier(.34,1.56,.64,1) forwards';
+  overlay.classList.add('active');
+  playDing();
+  setTimeout(() => {
+    state.language = newLang;
+    saveLang();
+    updateGreeting();
+    updateNavLabels();
+    if (state.viewingDetail) {
+      renderDetailView(state.viewingDetail);
+    } else if (state.showRecipes && state.generatedRecipes.length > 0) {
+      renderRecipeListSection();
+    } else {
+      renderHome();
+    }
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      state.switchingLang = false;
+      showToast(newLang === 'hi' ? '🇮🇳 Hinglish chuna gaya!' : '🇬🇧 English selected!', 'success', 1800);
+    }, 500);
+  }, 1100);
+}
+
+/* ============================================================
+   PARTICLES
+   ============================================================ */
+function initSplashParticles() {
+  const c = document.getElementById('splashParticles');
+  if (!c) return;
+  const foods = ['🍅','🥕','🥦','🧄','🧅','🌽','🍋','🥬','🍄','🫑'];
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = foods[Math.floor(Math.random() * foods.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 4) + 's';
+    p.style.fontSize = (16 + Math.random() * 18) + 'px';
+    c.appendChild(p);
+  }
+}
+function initLangParticles() {
+  const c = document.getElementById('langParticles');
+  if (!c) return;
+  const foods = ['🍅','🥕','🥦','🧄','🧅','🌽','🍋','🥬','🍄','🫑'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'lang-particle';
+    p.textContent = foods[Math.floor(Math.random() * foods.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (9 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 5) + 's';
+    p.style.fontSize = (16 + Math.random() * 18) + 'px';
+    c.appendChild(p);
+  }
+}
+
+/* ============================================================
+   LANGUAGE MODAL
+   ============================================================ */
+function showLanguageModal() {
+  const modal = document.getElementById('langModal');
+  modal.classList.remove('hidden');
+  initLangParticles();
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.language = btn.dataset.lang;
+      saveLang();
+      localStorage.setItem(LS.LANG_CHOSEN, 'true');
+      modal.classList.add('hidden');
+      playDing();
+      showToast(state.language === 'hi' ? '🇮🇳 Hinglish chuna gaya!' : '🇬🇧 English selected!', 'success', 2200);
+      setTimeout(() => {
+        updateGreeting();
+        updateNavLabels();
+        resetToHome();
+      }, 300);
+    });
+  });
+}
+
+/* ============================================================
+   BACK BUTTON
+   ============================================================ */
+window.addEventListener('popstate', () => {
+  if (state.viewingDetail) {
+    state.viewingDetail = null;
+    if (state.showRecipes && state.generatedRecipes.length > 0) {
+      renderRecipeListSection();
+    } else {
+      resetToHome();
+    }
+    history.pushState({app:'pakghar'}, '');
+    return;
+  }
+  if (state.showRecipes) {
+    resetToHome();
+    history.pushState({app:'pakghar'}, '');
+    return;
+  }
+  if (state.currentTab !== 'home') {
+    switchTab('home');
+    history.pushState({app:'pakghar'}, '');
+    return;
+  }
+  if (state.currentTab === 'home') {
+    if (!state.backPressedOnce) {
+      state.backPressedOnce = true;
+      showToast(t('exitApp'),'warning',2000);
+      playError();
+      setTimeout(() => { state.backPressedOnce = false; }, 2200);
+      history.pushState({app:'pakghar'}, '');
+    } else {
+      window.history.back();
+    }
+  }
+});
+
+/* ============================================================
+   INIT — binds ALL nav buttons before app shows
+   ============================================================ */
+function bindAllEvents() {
+  // Nav buttons
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      playClick();
+      switchTab(item.dataset.tab);
+    });
+  });
+
+  // Header buttons
+  const favHeaderBtn = document.getElementById('favHeaderBtn');
+  if (favHeaderBtn) {
+    favHeaderBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('favorites');
+    });
+  }
+
+  const langSwitchBtn = document.getElementById('langSwitchBtn');
+  if (langSwitchBtn) {
+    langSwitchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const newLang = state.language === 'en' ? 'hi' : 'en';
+      switchLanguage(newLang);
+    });
+  }
+}
+
+function initApp() {
+  loadStorage();
+  updateFavDot();
+  updateGreeting();
+  updateNavLabels();
+  initKeyboardDetection();
+  bindAllEvents();
+
+  if (firebaseReady && firebaseDB) {
+    try {
+      firebaseDB.ref('pakgharApp/stats').on('value', snap => {
+        const s = snap.val();
+        if (s) console.log('📊 Realtime stats:', s);
+      });
+    } catch(e){ console.warn(e); }
+  }
+
+  history.pushState({app:'pakghar'}, '');
+
+  const app = document.getElementById('app');
+  app.classList.remove('hidden');
+  requestAnimationFrame(() => app.classList.add('ready'));
+
+  resetToHome();
+}
+
+window.addEventListener('load', () => {
+  initSplashParticles();
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hidden');
+    const langChosen = localStorage.getItem(LS.LANG_CHOSEN);
+    if (langChosen === 'true') {
+      initApp();
+    } else {
+      // Bind nav BEFORE showing lang modal so buttons work
+      bindAllEvents();
+      showLanguageModal();
+      loadStorage();
+      updateGreeting();
+      updateNavLabels();
+      initKeyboardDetection();
+      setTimeout(() => {
+        document.getElementById('app').classList.remove('hidden');
+        requestAnimationFrame(() => document.getElementById('app').classList.add('ready'));
+        resetToHome();
+      }, 100);
+    }
+  }, 2600);
+});
+
+window.removeIngredient = removeIngredient;
+window.switchTab = switchTab;
+window.toggleFavorite = toggleFavorite;
+window.openRecipeDetail = openRecipeDetail;
+window.loadHistory = loadHistory;
+window.resetToHome = resetToHome;
+</script>
+</body>
+</html>
